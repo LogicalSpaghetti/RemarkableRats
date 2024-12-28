@@ -9,7 +9,6 @@ val mod_id: String = "remarkablerats";
 val logger: Logger = LoggerFactory.getLogger(mod_id);
 
 object RemarkableRats : ModInitializer {
-
 	override fun onInitialize() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
