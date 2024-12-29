@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:granite"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "remarkablerats:morton_pink_granite"
+  }
+}

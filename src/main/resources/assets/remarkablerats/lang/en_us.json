@@ -1,3 +1,7 @@
 {
-  "item.remarkablerats.ratatouille": "Ratatouille"
+  "item.remarkablerats.ratatouille": "Ratatouille",
+
+  "block.remarkablerats.morton_pink_granite": "Morton Pink Granite",
+
+  "itemgroup.remarkablerats.remarkablerats_group" : "Remarkable Rats"
 }

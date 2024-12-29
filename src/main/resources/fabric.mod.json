@@ -26,6 +26,12 @@
 				"value": "spaghetti.remarkablerats.RemarkableRatsDataGenerator",
 				"adapter": "kotlin"
 			}
+		],
+		"client": [
+			{
+				"value": "spaghetti.remarkablerats.RemarkableRatsClient",
+				"adapter": "kotlin"
+			}
 		]
 	},
 	"mixins": [
