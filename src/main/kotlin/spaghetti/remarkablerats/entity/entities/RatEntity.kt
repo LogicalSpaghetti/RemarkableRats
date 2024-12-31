@@ -14,12 +14,11 @@ import net.minecraft.nbt.NbtCompound
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.SoundEvent
 import net.minecraft.world.World
-import spaghetti.remarkablerats.tags.ModTags
 import spaghetti.remarkablerats.entity.ModEntities
+import spaghetti.remarkablerats.tags.ModTags.Items.rat_consumable_items
 
 class RatEntity(entityType: EntityType<out TameableEntity>, world: World?)
-    : TameableEntity(entityType, world), Bucketable
-{
+    : TameableEntity(entityType, world), Bucketable {
 
     val idleAnimationState: AnimationState = AnimationState()
     private var idleAnimationCooldown = 0
@@ -76,7 +75,7 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?)
     }
 
     override fun isBreedingItem(stack: ItemStack): Boolean {
-        return stack.isIn(ModTags.rat_consumable_items);
+        return stack.isIn(rat_consumable_items);
     }
 
     override fun isFromBucket(): Boolean {

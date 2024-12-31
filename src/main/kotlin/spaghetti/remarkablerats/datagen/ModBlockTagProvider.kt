@@ -7,8 +7,8 @@ import net.minecraft.registry.tag.BlockTags
 import spaghetti.remarkablerats.block.ModBlocks
 import java.util.concurrent.CompletableFuture
 
-class ModBlockTagProvider(output: FabricDataOutput, registriesFuture: CompletableFuture<WrapperLookup>) :
-    BlockTagProvider(output, registriesFuture) {
+class ModBlockTagProvider(output: FabricDataOutput, registriesFuture: CompletableFuture<WrapperLookup>)
+    : BlockTagProvider(output, registriesFuture) {
     override fun configure(arg: WrapperLookup) {
         getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
             .add(ModBlocks.morton_pink_granite);

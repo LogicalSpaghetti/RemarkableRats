@@ -13,7 +13,7 @@ import spaghetti.remarkablerats.mod_id
 
 
 object ModItemGroups {
-    val remarkablerats_group: ItemGroup = Registry.register(Registries.ITEM_GROUP,
+    private val remarkablerats_item_group: ItemGroup = Registry.register(Registries.ITEM_GROUP,
         Identifier.of(mod_id, "remarkablerats_group"),
         FabricItemGroup.builder().icon { ItemStack(ModItems.ratatouille) }
             .displayName(Text.translatable("itemgroup.remarkablerats.remarkablerats_group"))
@@ -23,8 +23,5 @@ object ModItemGroups {
                 entries.add(ModBlocks.morton_pink_granite);
             }.build());
 
-    fun registerItemGroups() {
-        logger.info("Registering Item Groups for $mod_id");
-
-    }
+    fun registerItemGroups() { logger.info("Registering $remarkablerats_item_group for $mod_id"); }
 }

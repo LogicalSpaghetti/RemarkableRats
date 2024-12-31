@@ -1,20 +1,14 @@
 package spaghetti.remarkablerats.block
 
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents.ModifyEntries
 import net.minecraft.block.AbstractBlock
 import net.minecraft.block.Block
-import net.minecraft.block.Blocks
 import net.minecraft.block.MapColor
 import net.minecraft.block.enums.NoteBlockInstrument
 import net.minecraft.item.BlockItem
 import net.minecraft.item.Item
-import net.minecraft.item.ItemGroups
 import net.minecraft.registry.Registries
 import net.minecraft.registry.Registry
 import net.minecraft.util.Identifier
-import spaghetti.remarkablerats.item.ModItems.ratatouille
 import spaghetti.remarkablerats.logger
 import spaghetti.remarkablerats.mod_id
 
@@ -36,12 +30,5 @@ object ModBlocks {
             BlockItem(block, Item.Settings()));
     }
 
-    fun registerModBlocks() {
-        logger.info("Registering Mod Blocks for $mod_id");
-
-//        ItemGroupEvents.modifyEntriesEvent(ItemGroups.BUILDING_BLOCKS)
-//            .register(ModifyEntries { entries: FabricItemGroupEntries ->
-//                entries.add(morton_pink_granite)
-//            });
-    }
+    fun registerModBlocks() { logger.info("Registering Mod Blocks for $mod_id"); }
 }

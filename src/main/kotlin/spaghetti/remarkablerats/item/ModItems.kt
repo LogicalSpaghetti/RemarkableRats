@@ -10,6 +10,7 @@ import spaghetti.remarkablerats.logger
 import spaghetti.remarkablerats.mod_id
 
 object ModItems {
+
     val ratatouille: Item = registerItem("ratatouille", Item(Item.Settings()));
 
     val rat_spawn_egg = registerItem("rat_spawn_egg",
@@ -20,7 +21,5 @@ object ModItems {
         return Registry.register(Registries.ITEM, Identifier.of(mod_id, name), item);
     }
 
-    fun registerModItems() {
-        logger.info("Registering Mod Items for $mod_id")
-    }
+    fun registerModItems() { logger.info("Registering Mod Items for $mod_id") }
 }

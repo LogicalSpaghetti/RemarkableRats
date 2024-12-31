@@ -6,18 +6,15 @@ import net.minecraft.entity.SpawnGroup
 import net.minecraft.registry.Registries
 import net.minecraft.registry.Registry
 import net.minecraft.util.Identifier
-import net.minecraft.world.World
 import spaghetti.remarkablerats.entity.entities.RatEntity
 import spaghetti.remarkablerats.logger
 import spaghetti.remarkablerats.mod_id
 
 object ModEntities {
-    val rat: EntityType<RatEntity> = Registry.register<EntityType<*>, EntityType<RatEntity>>(
+    val rat: EntityType<RatEntity> = Registry.register(
         Registries.ENTITY_TYPE,
         Identifier.of(mod_id, "rat"),
-        EntityType.Builder.create({ entityType: EntityType<RatEntity>, world: World ->
-            RatEntity(entityType, world)
-        }, SpawnGroup.CREATURE)
+        EntityType.Builder.create(::RatEntity, SpawnGroup.CREATURE)
             .dimensions(0.6f, 0.4f).build()
     );
 

@@ -8,11 +8,10 @@ import net.minecraft.util.Identifier
 import spaghetti.remarkablerats.entity.client.ModModelLayers
 import spaghetti.remarkablerats.mod_id
 
-class RatRenderer(context: EntityRendererFactory.Context) : MobEntityRenderer<RatEntity, RatModel<RatEntity>>(
-    context,
-    RatModel<RatEntity>(context.getPart(ModModelLayers.rat)),
-    0.3f
-) {
+class RatRenderer(context: EntityRendererFactory.Context)
+    : MobEntityRenderer<RatEntity, RatModel<RatEntity>>
+    (context, RatModel(context.getPart(ModModelLayers.rat)), 0.3f)
+{
     // ratEntity.getVariant().getName()
     override fun getTexture(ratEntity: RatEntity): Identifier {
         return Identifier.of(mod_id, "textures/entity/" + "black" + "_rat.png")

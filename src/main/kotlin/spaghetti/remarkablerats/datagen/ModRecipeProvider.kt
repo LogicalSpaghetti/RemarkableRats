@@ -11,10 +11,8 @@ import spaghetti.remarkablerats.block.ModBlocks
 import spaghetti.remarkablerats.item.ModItems
 import java.util.concurrent.CompletableFuture
 
-class ModRecipeProvider
-    (output: FabricDataOutput, registriesFuture: CompletableFuture<WrapperLookup>) :
-    FabricRecipeProvider(output, registriesFuture) {
-
+class ModRecipeProvider (output: FabricDataOutput, registriesFuture: CompletableFuture<WrapperLookup>)
+    : FabricRecipeProvider(output, registriesFuture) {
     override fun generate(exporter: RecipeExporter) {
         ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, ModItems.ratatouille, 1)
             .input(Items.BOWL)
