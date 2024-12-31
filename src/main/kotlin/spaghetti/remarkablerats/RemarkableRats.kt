@@ -3,25 +3,25 @@ package spaghetti.remarkablerats
 import net.fabricmc.api.ModInitializer
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import spaghetti.remarkablerats.block.ModBlocks
-import spaghetti.remarkablerats.entity.ModEntities
-import spaghetti.remarkablerats.item.ModItemGroups
-import spaghetti.remarkablerats.item.ModItems
-import spaghetti.remarkablerats.sound.ModSounds
+import spaghetti.remarkablerats.block.RatBlocks
+import spaghetti.remarkablerats.entity.RatEntities
+import spaghetti.remarkablerats.item.RatItemGroups
+import spaghetti.remarkablerats.item.RatItems
+import spaghetti.remarkablerats.sound.RatSounds
 
-const val mod_id: String = "remarkablerats";
-val logger: Logger = LoggerFactory.getLogger(mod_id);
+const val rat_id: String = "remarkablerats";
+val logger: Logger = LoggerFactory.getLogger(rat_id);
 
 object RemarkableRats : ModInitializer {
 	override fun onInitialize() {
-		logger.info("Initializing $mod_id");
+		logger.info("Initializing $rat_id");
 
-		ModItemGroups.registerItemGroups();
-		ModSounds.registerSounds()
+		RatItemGroups.registerRatItemGroups();
+		RatSounds.registerRatSounds();
 
-		ModItems.registerModItems();
-		ModBlocks.registerModBlocks();
+		RatItems.registerRatItems();
+		RatBlocks.registerRatBlocks();
 
-		ModEntities.registerModEntities()
+		RatEntities.registerRatEntities();
 	}
 }

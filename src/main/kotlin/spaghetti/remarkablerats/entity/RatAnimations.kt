@@ -5,7 +5,7 @@ import net.minecraft.client.render.entity.animation.AnimationHelper
 import net.minecraft.client.render.entity.animation.Keyframe
 import net.minecraft.client.render.entity.animation.Transformation
 
-object ModAnimations {
+object RatAnimations {
     val RAT_IDLE: Animation = Animation.Builder.create(2.0f).looping()
         .addBoneAnimation(
             "Tail", Transformation(

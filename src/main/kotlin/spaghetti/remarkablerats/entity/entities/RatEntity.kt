@@ -15,9 +15,9 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.SoundEvent
 import net.minecraft.sound.SoundEvents
 import net.minecraft.world.World
-import spaghetti.remarkablerats.entity.ModEntities
-import spaghetti.remarkablerats.sound.ModSounds
-import spaghetti.remarkablerats.tags.ModTags.Items.rat_consumable_items
+import spaghetti.remarkablerats.entity.RatEntities
+import spaghetti.remarkablerats.sound.RatSounds
+import spaghetti.remarkablerats.tags.RatTags.Items.rat_consumable_items
 
 class RatEntity(entityType: EntityType<out TameableEntity>, world: World?)
     : TameableEntity(entityType, world), Bucketable {
@@ -73,7 +73,7 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?)
     }
 
     override fun createChild(world: ServerWorld?, entity: PassiveEntity?): PassiveEntity? {
-        return ModEntities.rat.create(world);
+        return RatEntities.rat.create(world);
     }
 
     override fun isBreedingItem(stack: ItemStack): Boolean {
@@ -105,7 +105,7 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?)
     }
 
     override fun getAmbientSound(): SoundEvent {
-        return ModSounds.rat_squeak_event
+        return RatSounds.rat_squeak_event
     }
 
 }

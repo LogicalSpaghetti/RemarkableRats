@@ -7,10 +7,10 @@ import spaghetti.remarkablerats.datagen.*
 class RemarkableRatsDataGenerator : DataGeneratorEntrypoint {
 	override fun onInitializeDataGenerator(fabricDataGenerator: FabricDataGenerator) {
 		val pack = fabricDataGenerator.createPack();
-		pack.addProvider(::ModBlockTagProvider);
-		pack.addProvider(::ModItemTagProvider);
-		pack.addProvider(::ModLootTableProvider);
-		pack.addProvider(::ModModelProvider);
-		pack.addProvider(::ModRecipeProvider);
+		pack.addProvider(::RatBlockTagProvider);
+		pack.addProvider(::RatItemTagProvider);
+		pack.addProvider(::RatLootTableProvider);
+		pack.addProvider(::RatModelProvider);
+		pack.addProvider(::RatRecipeProvider);
 	}
 }

@@ -7,20 +7,20 @@ import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder
 import net.minecraft.item.Items
 import net.minecraft.recipe.book.RecipeCategory
 import net.minecraft.registry.RegistryWrapper.WrapperLookup
-import spaghetti.remarkablerats.block.ModBlocks
-import spaghetti.remarkablerats.item.ModItems
+import spaghetti.remarkablerats.block.RatBlocks
+import spaghetti.remarkablerats.item.RatItems
 import java.util.concurrent.CompletableFuture
 
-class ModRecipeProvider (output: FabricDataOutput, registriesFuture: CompletableFuture<WrapperLookup>)
+class RatRecipeProvider (output: FabricDataOutput, registriesFuture: CompletableFuture<WrapperLookup>)
     : FabricRecipeProvider(output, registriesFuture) {
     override fun generate(exporter: RecipeExporter) {
-        ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, ModItems.ratatouille, 1)
+        ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, RatItems.ratatouille, 1)
             .input(Items.BOWL)
-            .input(ModBlocks.morton_pink_granite)
-            .criterion(hasItem(ModBlocks.morton_pink_granite), conditionsFromItem(ModBlocks.morton_pink_granite))
+            .input(RatBlocks.morton_pink_granite)
+            .criterion(hasItem(RatBlocks.morton_pink_granite), conditionsFromItem(RatBlocks.morton_pink_granite))
             .offerTo(exporter);
 
-        ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, ModBlocks.morton_pink_granite, 1)
+        ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, RatBlocks.morton_pink_granite, 1)
             .input(Items.GRANITE)
             .criterion(hasItem(Items.GRANITE), conditionsFromItem(Items.GRANITE))
             .offerTo(exporter);

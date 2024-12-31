@@ -7,21 +7,21 @@ import net.minecraft.registry.Registries
 import net.minecraft.registry.Registry
 import net.minecraft.text.Text
 import net.minecraft.util.Identifier
-import spaghetti.remarkablerats.block.ModBlocks
+import spaghetti.remarkablerats.block.RatBlocks
 import spaghetti.remarkablerats.logger
-import spaghetti.remarkablerats.mod_id
+import spaghetti.remarkablerats.rat_id
 
 
-object ModItemGroups {
+object RatItemGroups {
     private val remarkablerats_item_group: ItemGroup = Registry.register(Registries.ITEM_GROUP,
-        Identifier.of(mod_id, "remarkablerats_group"),
-        FabricItemGroup.builder().icon { ItemStack(ModItems.ratatouille) }
+        Identifier.of(rat_id, "remarkablerats_group"),
+        FabricItemGroup.builder().icon { ItemStack(RatItems.ratatouille) }
             .displayName(Text.translatable("itemgroup.remarkablerats.remarkablerats_group"))
             .entries { _: ItemGroup.DisplayContext, entries: ItemGroup.Entries ->
-                entries.add(ModItems.rat_spawn_egg);
-                entries.add(ModItems.ratatouille);
-                entries.add(ModBlocks.morton_pink_granite);
+                entries.add(RatItems.rat_spawn_egg);
+                entries.add(RatItems.ratatouille);
+                entries.add(RatBlocks.morton_pink_granite);
             }.build());
 
-    fun registerItemGroups() { logger.info("Registering $remarkablerats_item_group for $mod_id"); }
+    fun registerRatItemGroups() { logger.info("Registering $remarkablerats_item_group for $rat_id"); }
 }
