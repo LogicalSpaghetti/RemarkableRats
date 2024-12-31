@@ -10,11 +10,11 @@ import net.minecraft.entity.passive.PassiveEntity
 import net.minecraft.entity.passive.TameableEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
-import net.minecraft.item.Items
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.SoundEvent
 import net.minecraft.world.World
+import spaghetti.remarkablerats.tags.ModTags
 import spaghetti.remarkablerats.entity.ModEntities
 
 class RatEntity(entityType: EntityType<out TameableEntity>, world: World?)
@@ -65,18 +65,18 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?)
     }
 
     override fun tick() {
-        super.tick()
+        super.tick();
         if (world.isClient()) {
             setupAnimationStates()
         }
     }
 
     override fun createChild(world: ServerWorld?, entity: PassiveEntity?): PassiveEntity? {
-        return ModEntities.rat.create(world)
+        return ModEntities.rat.create(world);
     }
 
     override fun isBreedingItem(stack: ItemStack): Boolean {
-        return stack.isOf(Items.WHEAT)
+        return stack.isIn(ModTags.rat_consumable_items);
     }
 
     override fun isFromBucket(): Boolean {

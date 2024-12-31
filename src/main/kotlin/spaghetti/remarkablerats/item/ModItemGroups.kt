@@ -10,7 +10,6 @@ import net.minecraft.util.Identifier
 import spaghetti.remarkablerats.block.ModBlocks
 import spaghetti.remarkablerats.logger
 import spaghetti.remarkablerats.mod_id
-import java.util.function.Supplier
 
 
 object ModItemGroups {
@@ -19,6 +18,7 @@ object ModItemGroups {
         FabricItemGroup.builder().icon { ItemStack(ModItems.ratatouille) }
             .displayName(Text.translatable("itemgroup.remarkablerats.remarkablerats_group"))
             .entries { _: ItemGroup.DisplayContext, entries: ItemGroup.Entries ->
+                entries.add(ModItems.rat_spawn_egg);
                 entries.add(ModItems.ratatouille);
                 entries.add(ModBlocks.morton_pink_granite);
             }.build());
