@@ -4,5 +4,7 @@
 
   "block.remarkablerats.morton_pink_granite": "Morton Pink Granite",
 
-  "itemgroup.remarkablerats.remarkablerats_group" : "Remarkable Rats"
+  "itemgroup.remarkablerats.remarkablerats_group" : "Remarkable Rats",
+
+  "subtitles.remarkablerats.rat_squeak" : "Remarkable Rats"
 }

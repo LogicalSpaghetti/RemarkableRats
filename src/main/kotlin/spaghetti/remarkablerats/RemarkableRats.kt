@@ -7,6 +7,7 @@ import spaghetti.remarkablerats.block.ModBlocks
 import spaghetti.remarkablerats.entity.ModEntities
 import spaghetti.remarkablerats.item.ModItemGroups
 import spaghetti.remarkablerats.item.ModItems
+import spaghetti.remarkablerats.sound.ModSounds
 
 const val mod_id: String = "remarkablerats";
 val logger: Logger = LoggerFactory.getLogger(mod_id);
@@ -16,6 +17,7 @@ object RemarkableRats : ModInitializer {
 		logger.info("Initializing $mod_id");
 
 		ModItemGroups.registerItemGroups();
+		ModSounds.registerSounds()
 
 		ModItems.registerModItems();
 		ModBlocks.registerModBlocks();

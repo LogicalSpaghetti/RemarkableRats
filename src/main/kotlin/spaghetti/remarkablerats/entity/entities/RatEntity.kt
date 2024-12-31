@@ -13,8 +13,10 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.SoundEvent
+import net.minecraft.sound.SoundEvents
 import net.minecraft.world.World
 import spaghetti.remarkablerats.entity.ModEntities
+import spaghetti.remarkablerats.sound.ModSounds
 import spaghetti.remarkablerats.tags.ModTags.Items.rat_consumable_items
 
 class RatEntity(entityType: EntityType<out TameableEntity>, world: World?)
@@ -99,6 +101,11 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?)
     }
 
     override fun getBucketFillSound(): SoundEvent {
-        TODO("Not yet implemented")
+        return SoundEvents.ITEM_BUNDLE_INSERT
     }
+
+    override fun getAmbientSound(): SoundEvent {
+        return ModSounds.rat_squeak_event
+    }
+
 }
