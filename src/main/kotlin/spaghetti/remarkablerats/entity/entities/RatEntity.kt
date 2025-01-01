@@ -1,11 +1,12 @@
 package spaghetti.remarkablerats.entity.entities
 
-import net.minecraft.entity.AnimationState
-import net.minecraft.entity.Bucketable
-import net.minecraft.entity.EntityType
+import net.minecraft.entity.*
 import net.minecraft.entity.ai.goal.*
 import net.minecraft.entity.attribute.DefaultAttributeContainer
 import net.minecraft.entity.attribute.EntityAttributes
+import net.minecraft.entity.data.DataTracker
+import net.minecraft.entity.data.TrackedData
+import net.minecraft.entity.data.TrackedDataHandlerRegistry
 import net.minecraft.entity.passive.PassiveEntity
 import net.minecraft.entity.passive.TameableEntity
 import net.minecraft.entity.player.PlayerEntity
@@ -14,16 +15,19 @@ import net.minecraft.nbt.NbtCompound
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.SoundEvent
 import net.minecraft.sound.SoundEvents
+import net.minecraft.world.LocalDifficulty
+import net.minecraft.world.ServerWorldAccess
 import net.minecraft.world.World
 import spaghetti.remarkablerats.entity.RatEntities
 import spaghetti.remarkablerats.sound.RatSounds
 import spaghetti.remarkablerats.tags.RatTags.Items.rat_consumable_items
 
+
 class RatEntity(entityType: EntityType<out TameableEntity>, world: World?)
     : TameableEntity(entityType, world), Bucketable {
+    val idleAnimationState: AnimationState = AnimationState();
+    private var idleAnimationCooldown = 0;
 
-    val idleAnimationState: AnimationState = AnimationState()
-    private var idleAnimationCooldown = 0
 
     override fun initGoals() {
         goalSelector.add(0, SwimGoal(this))
@@ -48,6 +52,8 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?)
     }
 
     companion object {
+        private val dataVariant: TrackedData<Int> =
+            DataTracker.registerData(RatEntity::class.java, TrackedDataHandlerRegistry.INTEGER);
         fun createAttributes(): DefaultAttributeContainer.Builder {
             return createMobAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0)
@@ -73,7 +79,10 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?)
     }
 
     override fun createChild(world: ServerWorld?, entity: PassiveEntity?): PassiveEntity? {
-        return RatEntities.rat.create(world);
+        // "this" is the parent spawning the child, and "entity" is the other parent
+        val child = RatEntities.rat.create(world);
+        child?.setVariant(RatVariant.getRandom(this.random));
+        return child;
     }
 
     override fun isBreedingItem(stack: ItemStack): Boolean {
@@ -108,4 +117,43 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?)
         return RatSounds.rat_squeak_event
     }
 
+    /* VARIANT */
+    override fun initDataTracker(builder: DataTracker.Builder) {
+        super.initDataTracker(builder);
+        println(dataVariant)
+        builder.add(dataVariant, 0);
+    }
+
+    // double check if the "and 255" is necessary, as the old project didn't use it
+    fun getVariant() : RatVariant = RatVariant.byId(this.getTypeVariant() and 255);
+
+    private fun getTypeVariant() : Int = this.dataTracker.get(dataVariant);
+
+    private fun setVariant(newVariant: RatVariant) {
+        this.dataTracker.set(dataVariant, newVariant.id and 255);
+    }
+
+    override fun writeCustomDataToNbt(nbt: NbtCompound) {
+        super.writeCustomDataToNbt(nbt)
+        nbt.putInt("Variant", this.getTypeVariant());
+    }
+
+    override fun readCustomDataFromNbt(nbt: NbtCompound) {
+        super.readCustomDataFromNbt(nbt);
+        this.dataTracker.set(dataVariant, nbt.getInt("Variant"));
+    }
+
+    override fun initialize(
+        world: ServerWorldAccess?,
+        difficulty: LocalDifficulty?,
+        spawnReason: SpawnReason?,
+        entityData: EntityData?
+    ): EntityData? {
+        println("Initializing Rat")
+        if (spawnReason == SpawnReason.BUCKET) return entityData;
+        println("Initializing Non-bucketed Rat")
+        setVariant(RatVariant.getRandom(this.random));
+        println("Variant set")
+        return super.initialize(world, difficulty, spawnReason, entityData)
+    }
 }

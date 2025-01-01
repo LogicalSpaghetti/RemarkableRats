@@ -13,8 +13,8 @@ class RatRenderer(context: EntityRendererFactory.Context)
     (context, RatModel(context.getPart(RatModelLayers.rat)), 0.3f)
 {
     // ratEntity.getVariant().getName()
-    override fun getTexture(ratEntity: RatEntity): Identifier {
-        return Identifier.of(rat_id, "textures/entity/" + "black" + "_rat.png")
+    override fun getTexture(rat: RatEntity): Identifier {
+        return Identifier.of(rat_id, "textures/entity/" + rat.getVariant().color + "_rat.png")
     }
 
     override fun render(

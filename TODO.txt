@@ -1,0 +1,11 @@
+Make Rats tamable
+Make Rats Bundle-able
+    (Ensure NBT is saved)
+Add Rat Menu
+    manipulate position
+        set path-find goal
+    inventory
+        equip slots
+    add interaction points
+    create-style instruction programming
+        improve later, keep it simple to begin.
