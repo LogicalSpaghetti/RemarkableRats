@@ -9,3 +9,5 @@ Add Rat Menu
     add interaction points
     create-style instruction programming
         improve later, keep it simple to begin.
+Can walk on Powder Snow
+Add tamed rat respawn mechanic
