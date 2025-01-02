@@ -1,7 +1,10 @@
+@file:Suppress("DEPRECATION")
+
 package spaghetti.remarkablerats.entity.entities
 
 import net.minecraft.advancement.criterion.Criteria
 import net.minecraft.component.DataComponentTypes
+import net.minecraft.component.type.NbtComponent
 import net.minecraft.entity.*
 import net.minecraft.entity.ai.goal.*
 import net.minecraft.entity.attribute.DefaultAttributeContainer
@@ -25,9 +28,9 @@ import net.minecraft.world.LocalDifficulty
 import net.minecraft.world.ServerWorldAccess
 import net.minecraft.world.World
 import spaghetti.remarkablerats.entity.RatEntities
+import spaghetti.remarkablerats.item.RatItems
 import spaghetti.remarkablerats.sound.RatSounds
 import spaghetti.remarkablerats.tags.RatTags.Items.rat_consumable_items
-
 
 class RatEntity(entityType: EntityType<out TameableEntity>, world: World?)
     : TameableEntity(entityType, world), Bucketable {
@@ -103,30 +106,16 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?)
         val stack = player.getStackInHand(hand)
         val item: Item = stack.item
 
-        // bundling
-        if (item === Items.BUNDLE) return tryBundle(stack, player, hand);
+        return if (item === Items.BUNDLE)
+            tryBundle(stack, player, hand);
 
-        if (this.isTamed) return tamedInteraction(stack, player, item, hand);
+        else if (this.isTamed)
+            tamedInteraction(stack, player, item, hand);
 
-        if (stack.contains(DataComponentTypes.FOOD)) { // taming
-            if (!player.abilities.creativeMode) {
-                player.getStackInHand(hand).decrement(1)
-            }
-            val saturation = item.components.get(DataComponentTypes.FOOD)!!.saturation
-            if (random.nextInt(1.coerceAtLeast(6 - saturation.toInt())) == 0) {
-                this.setOwner(player)
-                navigation.stop()
-                this.isSitting = true
-                this.target = null
-                world.sendEntityStatus(this, 7.toByte())
-            } else {
-                for (i in 0..6) {
-                    world.sendEntityStatus(this, EntityStatuses.ADD_NEGATIVE_PLAYER_REACTION_PARTICLES)
-                }
-            }
-            return ActionResult.SUCCESS
-        }
-        return super.interactMob(player, hand)
+        else if (stack.contains(DataComponentTypes.FOOD))
+            tryTaming(player, hand, item);
+
+        else super.interactMob(player, hand);
     }
 
     /*** NBT save/load
@@ -135,26 +124,128 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?)
     override fun initDataTracker(builder: DataTracker.Builder) {
         super.initDataTracker(builder);
         builder.add(variant, 0);
-        builder.add(outfit_color, 0);
+        builder.add(outfit_color, DyeColor.RED.id);
+        builder.add(from_bucket, false);
     }
 
     override fun writeCustomDataToNbt(nbt: NbtCompound) {
         super.writeCustomDataToNbt(nbt)
-        nbt.putInt("Variant", this.getTypeVariant());
-        nbt.putInt("OutfitColor", this.getOutfitColor().id)
+        nbt.putInt("Variant", getTypeVariant());
+        nbt.putInt("OutfitColor", getOutfitColor().id);
+        nbt.putBoolean("FromBucket", isFromBucket);
+        nbt.putInt("Age", this.getBreedingAge())
+
     }
 
     override fun readCustomDataFromNbt(nbt: NbtCompound) {
         super.readCustomDataFromNbt(nbt);
         this.dataTracker.set(variant, nbt.getInt("Variant"));
-        println("readCustomDataFromNbt was called")
         if (nbt.contains("OutfitColor"))
             this.dataTracker.set(outfit_color, nbt.getInt("OutfitColor"));
+        if (nbt.contains("Age"))
+            this.setBreedingAge(nbt.getInt("Age"));
+    }
+
+    /*** Bundling
+     */
+
+    // Rat NBT -> Bundle NBT
+    override fun copyDataToStack(stack: ItemStack) {
+        Bucketable.copyDataToStack(this, stack)
+        NbtComponent.set(DataComponentTypes.BUCKET_ENTITY_DATA, stack) { nbt: NbtCompound ->
+            nbt.putInt("Variant", getTypeVariant());
+            nbt.putInt("OutfitColor", getOutfitColor().id);
+            nbt.putBoolean("FromBucket", isFromBucket);
+            nbt.putInt("Age", this.getBreedingAge());
+            if (ownerUuid != null)
+                nbt.putUuid("OwnerUuid", ownerUuid)
+        }
+    }
+
+    // Bundle NBT -> Rat NBT
+    override fun copyDataFromNbt(nbt: NbtCompound) {
+        Bucketable.copyDataFromNbt(this, nbt);
+        this.dataTracker.set(variant, nbt.getInt("Variant"));
+        println("readCustomDataFromNbt was called");
+        if (nbt.contains("OutfitColor"))
+            this.dataTracker.set(outfit_color, nbt.getInt("OutfitColor"));
+        if (nbt.contains("Age")) {
+            this.setBreedingAge(nbt.getInt("Age"));
+        }
+        if (nbt.contains("OwnerUuid")) {
+            setTamed(true, true);
+            ownerUuid = nbt.getUuid("OwnerUuid");
+        }
+    }
+
+    private fun tryBundle(stack: ItemStack, player: PlayerEntity, hand: Hand): ActionResult {
+        if (stack.item !== Items.BUNDLE || !this.isAlive) return ActionResult.FAIL;
+
+        this.playSound(SoundEvents.ITEM_BUNDLE_INSERT, 1.0f, 1.0f);
+
+        // TODO: check if as Bucketable is necessary
+        val itemStack2 = (this as Bucketable).bucketItem;
+        (this as Bucketable).copyDataToStack(itemStack2);
+        val itemStack3 = ItemUsage.exchangeStack(stack, player, itemStack2, false);
+        player.setStackInHand(hand, itemStack3)
+        val world = this.world
+        if (!world.isClient) {
+            Criteria.FILLED_BUCKET.trigger(player as ServerPlayerEntity, itemStack2)
+        }
+        this.discard()
+        return ActionResult.success(world.isClient)
+    }
+
+    override fun isFromBucket(): Boolean = dataTracker.get(from_bucket);
+
+    override fun setFromBucket(isFromBucket: Boolean) {
+        dataTracker.set(from_bucket, isFromBucket);
+    }
+
+    override fun getBucketItem(): ItemStack {
+        return RatItems.bundle_of_rats.defaultStack;
+    }
+
+    override fun getBucketFillSound(): SoundEvent {
+        return SoundEvents.ITEM_BUNDLE_INSERT
+    }
+
+    /*** VARIANT */
+
+    // TODO: double check if the "and 255" is necessary, as the old project didn't use it
+    fun getVariant() : RatVariant = RatVariant.byId(this.getTypeVariant() and 255);
+
+    private fun getTypeVariant() : Int = this.dataTracker.get(variant);
+
+    private fun setVariant(newVariant: RatVariant) {
+        this.dataTracker.set(variant, newVariant.id and 255);
+    }
+
+    /*** Taming
+     */
+
+    private fun tryTaming(player: PlayerEntity, hand: Hand, item: Item): ActionResult {
+        if (!player.abilities.creativeMode) {
+            player.getStackInHand(hand).decrement(1);
+        }
+
+        val saturation = item.components.get(DataComponentTypes.FOOD)!!.saturation
+        if (random.nextInt(1.coerceAtLeast(6 - saturation.toInt())) == 0) {
+            this.setOwner(player)
+            navigation.stop()
+            this.isSitting = true
+            this.target = null
+            world.sendEntityStatus(this, 7.toByte())
+        } else {
+            for (i in 0..6) {
+                world.sendEntityStatus(this, EntityStatuses.ADD_NEGATIVE_PLAYER_REACTION_PARTICLES)
+            }
+        }
+        return ActionResult.SUCCESS
     }
 
     /*** Tamed behavior
      */
-
     private fun tamedInteraction(stack: ItemStack, player: PlayerEntity, item: Item, hand: Hand): ActionResult {
         val actionResult: ActionResult
         // healing
@@ -179,6 +270,7 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?)
             }
         }
 
+        // sitting(?) TODO: Clean up
         if ((super.interactMob(player, hand)
                 .also { actionResult = it }).isAccepted && !this.isBaby || !this.isOwner(player)
         ) return actionResult
@@ -193,69 +285,10 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?)
      */
 
     // TODO: Implement outfits and dying
-    private fun getOutfitColor(): DyeColor = DyeColor.byId(dataTracker.get(outfit_color))
-
+    private fun getOutfitColor(): DyeColor =
+        DyeColor.byId(dataTracker.get(outfit_color))
     private fun setOutfitColor(color: DyeColor) {
-        dataTracker.set(outfit_color, color.id)
-    }
-
-    /***
-     * Bundling
-     */
-
-    private fun tryBundle(stack: ItemStack, player: PlayerEntity, hand: Hand): ActionResult {
-        if (stack.item !== Items.BUNDLE || !this.isAlive) return ActionResult.FAIL;
-
-        this.playSound(SoundEvents.ITEM_BUNDLE_INSERT, 1.0f, 1.0f);
-
-        // TODO: check if as Bucketable is necessary
-        val itemStack2 = (this as Bucketable).bucketItem;
-        (this as Bucketable).copyDataToStack(itemStack2);
-        val itemStack3 = ItemUsage.exchangeStack(stack, player, itemStack2, false);
-        player.setStackInHand(hand, itemStack3)
-        val world = this.world
-        if (!world.isClient) {
-            Criteria.FILLED_BUCKET.trigger(player as ServerPlayerEntity, itemStack2)
-        }
-        this.discard()
-        return ActionResult.success(world.isClient)
-    }
-
-    override fun isFromBucket(): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun setFromBucket(fromBucket: Boolean) {
-        TODO("Not yet implemented")
-    }
-
-    // part of bucketing, not regular NBT behavior
-    override fun copyDataToStack(stack: ItemStack?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun copyDataFromNbt(nbt: NbtCompound?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun getBucketItem(): ItemStack {
-        TODO("Not yet implemented")
-    }
-
-    override fun getBucketFillSound(): SoundEvent {
-        return SoundEvents.ITEM_BUNDLE_INSERT
-    }
-
-    /*** VARIANT */
-
-    // TODO: double check if the "and 255" is necessary, as the old project didn't use it
-    fun getVariant() : RatVariant = RatVariant.byId(this.getTypeVariant() and 255);
-
-    private fun getTypeVariant() : Int = this.dataTracker.get(variant);
-
-    private fun setVariant(newVariant: RatVariant) {
-        this.dataTracker.set(variant, newVariant.id and 255);
-    }
+        dataTracker.set(outfit_color, color.id) }
 
     /*** Companions (static things)
      */
@@ -265,6 +298,9 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?)
             DataTracker.registerData(RatEntity::class.java, TrackedDataHandlerRegistry.INTEGER);
         private val outfit_color: TrackedData<Int> =
             DataTracker.registerData(RatEntity::class.java, TrackedDataHandlerRegistry.INTEGER);
+        private val from_bucket: TrackedData<Boolean> =
+            DataTracker.registerData(RatEntity::class.java, TrackedDataHandlerRegistry.BOOLEAN)
+
 
         fun createAttributes(): DefaultAttributeContainer.Builder {
             return createMobAttributes()

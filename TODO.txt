@@ -1,4 +1,3 @@
-Make Rats tamable
 Make Rats Bundle-able
     (Ensure NBT is saved)
 Add Rat Menu
@@ -11,3 +10,4 @@ Add Rat Menu
         improve later, keep it simple to begin.
 Can walk on Powder Snow
 Add tamed rat respawn mechanic
+Untamed rats should de-spawn unless previously bundled

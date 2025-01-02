@@ -20,6 +20,8 @@ object RatItemGroups {
             .entries { _: ItemGroup.DisplayContext, entries: ItemGroup.Entries ->
                 entries.add(RatItems.rat_spawn_egg);
                 entries.add(RatItems.ratatouille);
+                entries.add(RatItems.bundle_of_rats);
+                entries.add(RatItems.rat_top_hat);
                 entries.add(RatBlocks.morton_pink_granite);
             }.build());
 

@@ -1,10 +1,14 @@
 {
   "item.remarkablerats.ratatouille": "Ratatouille",
   "item.remarkablerats.rat_spawn_egg": "Rat Spawn Egg",
+  "item.remarkablerats.rat_top_hat": "Rat Top Hat",
+  "item.remarkablerats.bundle_of_rats": "Bundle of Rats",
+
+  "entity.remarkablerats.rat": "Rat",
 
   "block.remarkablerats.morton_pink_granite": "Morton Pink Granite",
 
   "itemgroup.remarkablerats.remarkablerats_group" : "Remarkable Rats",
 
-  "subtitles.remarkablerats.rat_squeak" : "Remarkable Rats"
+  "subtitles.remarkablerats.rat_squeak" : "Rat Squeaks"
 }

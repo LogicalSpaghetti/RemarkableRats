@@ -18,6 +18,8 @@ class RatModelProvider(output: FabricDataOutput) : FabricModelProvider(output) {
 
     override fun generateItemModels(itemModelGenerator: ItemModelGenerator) {
         itemModelGenerator.register(RatItems.ratatouille, Models.GENERATED);
+        itemModelGenerator.register(RatItems.rat_top_hat, Models.GENERATED);
+        itemModelGenerator.register(RatItems.bundle_of_rats, Models.GENERATED);
 
         itemModelGenerator.register(
             RatItems.rat_spawn_egg,

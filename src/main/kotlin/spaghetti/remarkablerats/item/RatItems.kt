@@ -1,17 +1,25 @@
 package spaghetti.remarkablerats.item
 
+import net.minecraft.fluid.Fluids
 import net.minecraft.item.Item
 import net.minecraft.item.SpawnEggItem
 import net.minecraft.registry.Registries
 import net.minecraft.registry.Registry
+import net.minecraft.sound.SoundEvents
 import net.minecraft.util.Identifier
 import spaghetti.remarkablerats.entity.RatEntities
+import spaghetti.remarkablerats.item.custom.BundleOfRatsItem
 import spaghetti.remarkablerats.logger
 import spaghetti.remarkablerats.rat_id
 
 object RatItems {
 
     val ratatouille: Item = registerItem("ratatouille", Item(Item.Settings()));
+    val bundle_of_rats: Item = registerItem(
+        "bundle_of_rats", BundleOfRatsItem(RatEntities.rat, Fluids.EMPTY,
+            SoundEvents.ITEM_BUNDLE_DROP_CONTENTS, Item.Settings().maxCount(1))
+    );
+    val rat_top_hat: Item = registerItem("rat_top_hat", Item(Item.Settings()));
 
     val rat_spawn_egg = registerItem("rat_spawn_egg",
         SpawnEggItem(
