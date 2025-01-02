@@ -51,10 +51,12 @@ class BundleOfRatsItem(type: EntityType<*>?, fluid: Fluid?, emptyingSound: Sound
     override fun appendTooltip(stack: ItemStack, context: TooltipContext,
                                tooltip: MutableList<Text>, type: TooltipType) {
         super.appendTooltip(stack, context, tooltip, type);
-        val nbtComponent = stack.getOrDefault(
-            DataComponentTypes.BUCKET_ENTITY_DATA, NbtComponent.DEFAULT);
-        tooltip.add(Text.literal("Variant: ${nbtComponent.nbt.getInt("Variant")}"));
-        tooltip.add(Text.literal("Tamed: ${nbtComponent.contains("OwnerUuid")}"));
+        val nbt = stack.getOrDefault(
+            DataComponentTypes.BUCKET_ENTITY_DATA, NbtComponent.DEFAULT).nbt;
+        tooltip.add(Text.literal("Variant: ${nbt.getInt("Variant")}"));
+        if (nbt.contains("OwnerUuid") && nbt.contains("OwnerName")) {
+            tooltip.add(Text.literal("Tamed By: ${nbt.getString("OwnerName")}"));
+        }
     }
 
     companion object {

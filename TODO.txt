@@ -11,3 +11,6 @@ Add Rat Menu
 Can walk on Powder Snow
 Add tamed rat respawn mechanic
 Untamed rats should de-spawn unless previously bundled
+Make it impossible to un-bundle a rat unless you own it?
+    Prevents the rat from forgetting its owner
+    There's likely a better solution

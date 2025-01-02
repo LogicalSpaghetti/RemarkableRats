@@ -157,8 +157,12 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?)
             nbt.putInt("OutfitColor", getOutfitColor().id);
             nbt.putBoolean("FromBucket", isFromBucket);
             nbt.putInt("Age", this.getBreedingAge());
-            if (ownerUuid != null)
-                nbt.putUuid("OwnerUuid", ownerUuid)
+            if (ownerUuid != null) {
+                nbt.putUuid("OwnerUuid", ownerUuid);
+                nbt.putString("OwnerName", owner?.name?.string ?: "No owner name found");
+
+            }
+
         }
     }
 
@@ -172,9 +176,9 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?)
         if (nbt.contains("Age")) {
             this.setBreedingAge(nbt.getInt("Age"));
         }
-        if (nbt.contains("OwnerUuid")) {
-            setTamed(true, true);
-            ownerUuid = nbt.getUuid("OwnerUuid");
+        if (nbt.contains("OwnerUuid") && (null != world.getPlayerByUuid(nbt.getUuid("OwnerUuid")))) {
+            setOwner(
+                world.getPlayerByUuid(nbt.getUuid("OwnerUuid")))
         }
     }
 
@@ -261,6 +265,7 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?)
         // dying
         if (item is DyeItem) {
             if (this.isOwner(player)) {
+                owner
                 val dyeColor = item.color
                 if (dyeColor == this.getOutfitColor()) return super.interactMob(player, hand)
                 this.setOutfitColor(dyeColor)
