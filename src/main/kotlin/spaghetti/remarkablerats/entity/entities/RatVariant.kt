@@ -18,18 +18,16 @@ enum class RatVariant(val id: Int, val color: String) {
     BLACK(3, "black");
 
     companion object {
-        private val BY_ID: IntFunction<RatVariant> = ValueLists.createIdToValueFunction(
-            { obj: RatVariant -> obj.id },
-            entries.toTypedArray(),
-            ValueLists.OutOfBoundsHandling.ZERO
-        );
+        private val BY_ID: IntFunction<RatVariant> =
+                ValueLists.createIdToValueFunction({ obj: RatVariant -> obj.id }, entries.toTypedArray(),
+                        ValueLists.OutOfBoundsHandling.ZERO)
 
         fun byId(id: Int): RatVariant {
             return BY_ID.apply(id)
         }
 
         fun getRandom(random: Random): RatVariant {
-            val variants = enumEntries<RatVariant>();
+            val variants = enumEntries<RatVariant>()
             return Util.getRandom(variants, random)
         }
     }

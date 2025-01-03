@@ -7,11 +7,10 @@ import net.minecraft.registry.tag.BlockTags
 import spaghetti.remarkablerats.block.RatBlocks
 import java.util.concurrent.CompletableFuture
 
-class RatBlockTagProvider(output: FabricDataOutput, registriesFuture: CompletableFuture<WrapperLookup>)
-    : BlockTagProvider(output, registriesFuture) {
+class RatBlockTagProvider(output: FabricDataOutput, registriesFuture: CompletableFuture<WrapperLookup>) :
+        BlockTagProvider(output, registriesFuture) {
     override fun configure(arg: WrapperLookup) {
-        getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
-            .add(RatBlocks.morton_pink_granite);
+        getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE).add(RatBlocks.morton_pink_granite)
     }
 }
 

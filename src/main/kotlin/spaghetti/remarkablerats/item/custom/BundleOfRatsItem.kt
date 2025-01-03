@@ -23,9 +23,9 @@ import net.minecraft.world.RaycastContext
 import net.minecraft.world.World
 
 class BundleOfRatsItem(type: EntityType<*>?, fluid: Fluid?, emptyingSound: SoundEvent?, settings: Settings?) :
-    EntityBucketItem(type, fluid, emptyingSound, settings) {
-    override fun placeFluid(player: PlayerEntity?, world: World, pos: BlockPos, hitResult: BlockHitResult?)
-    : Boolean = true;
+        EntityBucketItem(type, fluid, emptyingSound, settings) {
+    override fun placeFluid(player: PlayerEntity?, world: World, pos: BlockPos, hitResult: BlockHitResult?): Boolean =
+            true
 
     override fun use(world: World, user: PlayerEntity, hand: Hand): TypedActionResult<ItemStack> {
         val itemStack = user.getStackInHand(hand)
@@ -48,14 +48,13 @@ class BundleOfRatsItem(type: EntityType<*>?, fluid: Fluid?, emptyingSound: Sound
         return TypedActionResult.pass(itemStack)
     }
 
-    override fun appendTooltip(stack: ItemStack, context: TooltipContext,
-                               tooltip: MutableList<Text>, type: TooltipType) {
-        super.appendTooltip(stack, context, tooltip, type);
-        val nbt = stack.getOrDefault(
-            DataComponentTypes.BUCKET_ENTITY_DATA, NbtComponent.DEFAULT).nbt;
-        tooltip.add(Text.literal("Variant: ${nbt.getInt("Variant")}"));
+    override fun appendTooltip(stack: ItemStack, context: TooltipContext, tooltip: MutableList<Text>,
+            type: TooltipType) {
+        super.appendTooltip(stack, context, tooltip, type)
+        val nbt = stack.getOrDefault(DataComponentTypes.BUCKET_ENTITY_DATA, NbtComponent.DEFAULT).nbt
+        tooltip.add(Text.literal("Variant: ${nbt.getInt("Variant")}"))
         if (nbt.contains("OwnerUuid") && nbt.contains("OwnerName")) {
-            tooltip.add(Text.literal("Tamed By: ${nbt.getString("OwnerName")}"));
+            tooltip.add(Text.literal("Tamed By: ${nbt.getString("OwnerName")}"))
         }
     }
 

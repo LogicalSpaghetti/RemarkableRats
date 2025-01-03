@@ -8,18 +8,14 @@ import net.minecraft.registry.Registry
 import net.minecraft.util.Identifier
 import spaghetti.remarkablerats.entity.entities.RatEntity
 import spaghetti.remarkablerats.logger
-import spaghetti.remarkablerats.rat_id
+import spaghetti.remarkablerats.mod_id
 
 object RatEntities {
-    val rat: EntityType<RatEntity> = Registry.register(
-        Registries.ENTITY_TYPE,
-        Identifier.of(rat_id, "rat"),
-        EntityType.Builder.create(::RatEntity, SpawnGroup.CREATURE)
-            .dimensions(0.6f, 0.4f).build()
-    );
+    val rat: EntityType<RatEntity> = Registry.register(Registries.ENTITY_TYPE, Identifier.of(mod_id, "rat"),
+            EntityType.Builder.create(::RatEntity, SpawnGroup.CREATURE).dimensions(0.6f, 0.4f).build())
 
     fun registerRatEntities() {
-        logger.info("Registering Entities for $rat_id")
+        logger.info("Registering Entities for $mod_id")
         registerEntityAttributes()
     }
 

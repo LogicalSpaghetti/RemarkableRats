@@ -8,14 +8,14 @@ import spaghetti.remarkablerats.tags.RatTags.Items.rat_consumable_items
 import java.util.concurrent.CompletableFuture
 
 
-class RatItemTagProvider(output: FabricDataOutput, completableFuture: CompletableFuture<WrapperLookup>)
-    : FabricTagProvider.ItemTagProvider(output, completableFuture) {
+class RatItemTagProvider(output: FabricDataOutput, completableFuture: CompletableFuture<WrapperLookup>) :
+        FabricTagProvider.ItemTagProvider(output, completableFuture) {
     override fun configure(arg: WrapperLookup) {
         getOrCreateTagBuilder(rat_consumable_items)
-            .add(Items.POTATO)
-            .add(Items.CARROT)
-            .add(Items.WHEAT)
-            .add(Items.BEETROOT)
-            .add(Items.RED_MUSHROOM);
+                .add(Items.POTATO)
+                .add(Items.CARROT)
+                .add(Items.WHEAT)
+                .add(Items.BEETROOT)
+                .add(Items.RED_MUSHROOM)
     }
 }

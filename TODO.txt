@@ -1,5 +1,3 @@
-Make Rats Bundle-able
-    (Ensure NBT is saved)
 Add Rat Menu
     manipulate position
         set path-find goal
@@ -14,3 +12,17 @@ Untamed rats should de-spawn unless previously bundled
 Make it impossible to un-bundle a rat unless you own it?
     Prevents the rat from forgetting its owner
     There's likely a better solution
+https://www.curseforge.com/minecraft/mc-mods/ender-chested
+
+Rat manipulations:
+    Path to (relative) location
+    Movement
+    Rotation
+    Delay
+    Sensing the world (mostly automatic)
+
+Ensure the commands seem intelligent, meaning rats understand their surroundings
+Rats should be good at complex tasks, but it should be difficult to explain the task *clearly*
+it should be easy for the rat to get carried away, such as trying to put items in a full chest
+rats should get bored/distracted
+    there are ways to keep rats more focussed, but they waste time.

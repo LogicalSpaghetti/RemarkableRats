@@ -9,21 +9,22 @@ import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 import spaghetti.remarkablerats.block.RatBlocks
 import spaghetti.remarkablerats.logger
-import spaghetti.remarkablerats.rat_id
+import spaghetti.remarkablerats.mod_id
 
 
 object RatItemGroups {
-    private val remarkablerats_item_group: ItemGroup = Registry.register(Registries.ITEM_GROUP,
-        Identifier.of(rat_id, "remarkablerats_group"),
-        FabricItemGroup.builder().icon { ItemStack(RatItems.ratatouille) }
-            .displayName(Text.translatable("itemgroup.remarkablerats.remarkablerats_group"))
-            .entries { _: ItemGroup.DisplayContext, entries: ItemGroup.Entries ->
-                entries.add(RatItems.rat_spawn_egg);
-                entries.add(RatItems.ratatouille);
-                entries.add(RatItems.bundle_of_rats);
-                entries.add(RatItems.rat_top_hat);
-                entries.add(RatBlocks.morton_pink_granite);
-            }.build());
+    private val remarkablerats_item_group: ItemGroup =
+            Registry.register(Registries.ITEM_GROUP, Identifier.of(mod_id, "remarkablerats_group"),
+                    FabricItemGroup.builder().icon { ItemStack(RatItems.ratatouille) }
+                            .displayName(Text.translatable("itemgroup.remarkablerats.remarkablerats_group"))
+                            .entries { _: ItemGroup.DisplayContext, entries: ItemGroup.Entries ->
+                                entries.add(RatItems.rat_spawn_egg)
+                                entries.add(RatItems.ratatouille)
+                                entries.add(RatItems.bundle_of_rats)
+                                entries.add(RatItems.rat_top_hat)
+                                entries.add(RatBlocks.morton_pink_granite)
+                            }.build())
 
-    fun registerRatItemGroups() { logger.info("Registering $remarkablerats_item_group for $rat_id"); }
+    fun registerRatItemGroups() {
+        logger.info("Registering $remarkablerats_item_group for $mod_id") }
 }
