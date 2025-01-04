@@ -1,10 +1,11 @@
-Add Rat Menu
+Add Rat Screen
+    Menu
+    Inventory
+        Equipment slots
     manipulate position
         set path-find goal
-    inventory
-        equip slots
-    add interaction points
-    create-style instruction programming
+        add interaction points
+    create-style instruction scripting
         improve later, keep it simple to begin.
 Can walk on Powder Snow
 Add tamed rat respawn mechanic
@@ -25,4 +26,4 @@ Ensure the commands seem intelligent, meaning rats understand their surroundings
 Rats should be good at complex tasks, but it should be difficult to explain the task *clearly*
 it should be easy for the rat to get carried away, such as trying to put items in a full chest
 rats should get bored/distracted
-    there are ways to keep rats more focussed, but they waste time.
+    there are ways to keep rats more focused, but they waste time.

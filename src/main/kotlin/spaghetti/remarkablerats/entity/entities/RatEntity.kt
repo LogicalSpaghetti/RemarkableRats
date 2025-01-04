@@ -22,6 +22,8 @@ import net.minecraft.inventory.Inventories
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.*
 import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.NbtElement
+import net.minecraft.nbt.NbtList
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
@@ -49,6 +51,7 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?) : Tam
     val idleAnimationState: AnimationState = AnimationState()
     private var idleAnimationCooldown = 0
     private var inventory: DefaultedList<ItemStack> = DefaultedList.ofSize(27, ItemStack.EMPTY)
+    private var wasSitting: Boolean = false;
 
     /*** Companions (static things) ***/
 
@@ -78,6 +81,7 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?) : Tam
 
     override fun initGoals() {
         goalSelector.add(0, SwimGoal(this))
+        goalSelector.add(0, PowderSnowJumpGoal(this, this.world))
         goalSelector.add(1, EscapeDangerGoal(this, 1.0))
         goalSelector.add(2, SitGoal(this))
         goalSelector.add(4, PounceAtTargetGoal(this, 0.4f))
@@ -128,7 +132,6 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?) : Tam
     override fun interactMob(player: PlayerEntity, hand: Hand): ActionResult {
         val stack = player.getStackInHand(hand)
         val item: Item = stack.item
-
         return if (item === Items.BUNDLE) tryBundle(stack, player, hand)
         else if (this.isTamed) tamedInteraction(stack, player, item, hand)
         else if (stack.contains(DataComponentTypes.FOOD)) tryTaming(player, hand, item)
@@ -150,6 +153,18 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?) : Tam
         nbt.putInt("OutfitColor", getOutfitColor().id)
         nbt.putBoolean("FromBucket", isFromBucket)
         nbt.putInt("Age", this.getBreedingAge())
+
+        //inventory
+        val nbtList = NbtList()
+        for (i in 1..<inventory.size) {
+            val itemStack: ItemStack = inventory[i]
+            if (!itemStack.isEmpty) {
+                val nbtCompound = NbtCompound()
+                nbtCompound.putByte("Slot", (i - 1).toByte())
+                nbtList.add(itemStack.encode(this.registryManager, nbtCompound))
+            }
+        }
+        nbt.put("Items", nbtList)
     }
 
     override fun readCustomDataFromNbt(nbt: NbtCompound) {
@@ -157,6 +172,16 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?) : Tam
         this.dataTracker.set(variant, nbt.getInt("Variant"))
         if (nbt.contains("OutfitColor")) this.dataTracker.set(outfit_color, nbt.getInt("OutfitColor"))
         if (nbt.contains("Age")) this.setBreedingAge(nbt.getInt("Age"))
+
+        // inventory
+        val nbtList = nbt.getList("Items", NbtElement.COMPOUND_TYPE.toInt())
+        for (i in nbtList.indices) {
+            val nbtCompound = nbtList.getCompound(i)
+            val j = nbtCompound.getByte("Slot").toInt() and 255
+            if (j < inventory.size - 1) {
+                inventory[j + 1] = ItemStack.fromNbt(this.registryManager, nbtCompound).orElse(ItemStack.EMPTY) as ItemStack
+            }
+        }
     }
 
     /*** Bundling ***/
@@ -375,4 +400,11 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?) : Tam
         return EntityIdPayload(this.id)
     }
 
+    fun onScreenOpened() {
+        wasSitting = isSitting;
+        isSitting = true
+    }
+    fun onScreenClosed() {
+        isSitting = wasSitting
+    }
 }

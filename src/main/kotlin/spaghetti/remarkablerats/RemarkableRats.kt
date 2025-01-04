@@ -14,6 +14,10 @@ import spaghetti.remarkablerats.sound.RatSounds
 const val mod_id: String = "remarkablerats"
 val logger: Logger = LoggerFactory.getLogger(mod_id)
 
+fun id(name: String): Identifier {
+    return Identifier.of(mod_id, name)
+}
+
 object RemarkableRats : ModInitializer {
     override fun onInitialize() {
         logger.info("Initializing $mod_id")

@@ -4,8 +4,7 @@ import net.minecraft.network.RegistryByteBuf
 import net.minecraft.network.codec.PacketCodec
 import net.minecraft.network.codec.PacketCodecs
 import net.minecraft.network.packet.CustomPayload
-import net.minecraft.util.Identifier
-import spaghetti.remarkablerats.mod_id
+import spaghetti.remarkablerats.id
 
 // @JvmRecord
 data class EntityIdPayload(val entityId: Int) : CustomPayload {
@@ -15,7 +14,7 @@ data class EntityIdPayload(val entityId: Int) : CustomPayload {
 
     companion object {
         val ID: CustomPayload.Id<EntityIdPayload?> = CustomPayload.Id<EntityIdPayload?>(
-                Identifier.of(mod_id, "entity_id"))
+                id("entity_id"))
         val PACKET_CODEC: PacketCodec<RegistryByteBuf, EntityIdPayload> = PacketCodec.tuple(PacketCodecs.INTEGER,
                 EntityIdPayload::entityId) { entityId: Int -> EntityIdPayload(entityId) }
     }

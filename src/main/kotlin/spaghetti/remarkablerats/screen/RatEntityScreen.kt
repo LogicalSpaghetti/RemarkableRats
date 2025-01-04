@@ -5,9 +5,9 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.text.Text
 import net.minecraft.util.Identifier
-import spaghetti.remarkablerats.mod_id
+import spaghetti.remarkablerats.id
 
-class RatScreen(handler: RatEntityScreenHandler?, inventory: PlayerInventory, title: Text?) :
+class RatEntityScreen(handler: RatEntityScreenHandler?, inventory: PlayerInventory, title: Text?) :
         HandledScreen<RatEntityScreenHandler?>(handler, inventory, title) {
     override fun drawBackground(context: DrawContext, delta: Float, mouseX: Int, mouseY: Int) {
         context.drawTexture(texture, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight)
@@ -27,6 +27,6 @@ class RatScreen(handler: RatEntityScreenHandler?, inventory: PlayerInventory, ti
     }
 
     companion object {
-        private val texture: Identifier = Identifier.of(mod_id, "textures/gui/single_slot_gui.png")
+        private val texture: Identifier = id("textures/gui/single_slot_gui.png")
     }
 }

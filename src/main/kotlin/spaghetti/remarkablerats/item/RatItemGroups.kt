@@ -6,15 +6,15 @@ import net.minecraft.item.ItemStack
 import net.minecraft.registry.Registries
 import net.minecraft.registry.Registry
 import net.minecraft.text.Text
-import net.minecraft.util.Identifier
 import spaghetti.remarkablerats.block.RatBlocks
+import spaghetti.remarkablerats.id
 import spaghetti.remarkablerats.logger
 import spaghetti.remarkablerats.mod_id
 
 
 object RatItemGroups {
     private val remarkablerats_item_group: ItemGroup =
-            Registry.register(Registries.ITEM_GROUP, Identifier.of(mod_id, "remarkablerats_group"),
+            Registry.register(Registries.ITEM_GROUP, id("remarkablerats_group"),
                     FabricItemGroup.builder().icon { ItemStack(RatItems.ratatouille) }
                             .displayName(Text.translatable("itemgroup.remarkablerats.remarkablerats_group"))
                             .entries { _: ItemGroup.DisplayContext, entries: ItemGroup.Entries ->

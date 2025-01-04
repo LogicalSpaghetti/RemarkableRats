@@ -6,14 +6,14 @@ import net.minecraft.client.render.entity.MobEntityRenderer
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.Identifier
 import spaghetti.remarkablerats.entity.client.RatModelLayers
-import spaghetti.remarkablerats.mod_id
+import spaghetti.remarkablerats.id
 
 class RatRenderer(context: EntityRendererFactory.Context) :
         MobEntityRenderer<RatEntity, RatModel<RatEntity>>(context, RatModel(context.getPart(RatModelLayers.rat)),
                 0.3f) {
     // ratEntity.getVariant().getName()
     override fun getTexture(rat: RatEntity): Identifier {
-        return Identifier.of(mod_id, "textures/entity/" + rat.getVariant().color + "_rat.png")
+        return id("textures/entity/" + rat.getVariant().color + "_rat.png")
     }
 
     override fun render(mobEntity: RatEntity, f: Float, g: Float, matrixStack: MatrixStack,

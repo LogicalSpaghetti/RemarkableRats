@@ -8,7 +8,7 @@ import net.minecraft.item.BlockItem
 import net.minecraft.item.Item
 import net.minecraft.registry.Registries
 import net.minecraft.registry.Registry
-import net.minecraft.util.Identifier
+import spaghetti.remarkablerats.id
 import spaghetti.remarkablerats.logger
 import spaghetti.remarkablerats.mod_id
 
@@ -20,11 +20,11 @@ object RatBlocks {
 
     private fun registerBlock(name: String, block: Block): Block {
         registerBlockItem(name, block)
-        return Registry.register(Registries.BLOCK, Identifier.of(mod_id, name), block)
+        return Registry.register(Registries.BLOCK, id(name), block)
     }
 
     private fun registerBlockItem(name: String, block: Block) {
-        Registry.register(Registries.ITEM, Identifier.of(mod_id, name), BlockItem(block, Item.Settings()))
+        Registry.register(Registries.ITEM, id(name), BlockItem(block, Item.Settings()))
     }
 
     fun registerRatBlocks() {
