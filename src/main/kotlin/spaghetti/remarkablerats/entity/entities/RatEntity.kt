@@ -63,7 +63,6 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?) : Tam
         private val from_bucket: TrackedData<Boolean> =
                 DataTracker.registerData(RatEntity::class.java, TrackedDataHandlerRegistry.BOOLEAN)
 
-
         fun createAttributes(): DefaultAttributeContainer.Builder {
             return createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0)
                     .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 1.0)

@@ -2,19 +2,23 @@ Add Rat Screen
     Menu
     Inventory
         Equipment slots
+    Quick-commands
+        Run any script or simple action
+            following
+            "Leashed" area defense
     manipulate position
         set path-find goal
         add interaction points
     create-style instruction scripting
         improve later, keep it simple to begin.
-Can walk on Powder Snow
+Make rats look at you properly
 Add tamed rat respawn mechanic
 Untamed rats should de-spawn unless previously bundled
 Make it impossible to un-bundle a rat unless you own it?
     Prevents the rat from forgetting its owner
     There's likely a better solution
 https://www.curseforge.com/minecraft/mc-mods/ender-chested
-
+paint.net
 Rat manipulations:
     Path to (relative) location
     Movement

@@ -20,11 +20,25 @@ class RatEntityScreen(handler: RatEntityScreenHandler?, inventory: PlayerInvento
         super.render(context, mouseX, mouseY, delta)
         drawMouseoverTooltip(context, mouseX, mouseY)
 
-        //        int energyBarSize = MathHelper.ceil(this.handler.getEnergyPercent() * 66);
+//        int energyBarSize = MathHelper.ceil(this.handler.getEnergyPercent() * 66);
 //        if (isPointWithinBounds(144, 10 + 66 - energyBarSize, 20, energyBarSize, mouseX, mouseY)) {
 //            context.drawTooltip(this.textRenderer, Text.literal(this.handler.getEnergy() + " / " + this.handler.getMaxEnergy() + " FE"), mouseX, mouseY);
 //        }
     }
+
+//    override fun init() {
+//        super.init()
+//
+//        // This code is injected into the start of MinecraftServer.loadWorld()V
+//        addDrawableChild(ButtonWidget.builder(Text.translatable("screen.remarkablerats.open_inventory")
+//        ) { button ->
+//            run {
+//                // code here is run when the button is pressed!
+//                println("Button Pressed")
+//            }
+//        }.size(20, 20)
+//                .build())
+//    }
 
     companion object {
         private val texture: Identifier = id("textures/gui/single_slot_gui.png")

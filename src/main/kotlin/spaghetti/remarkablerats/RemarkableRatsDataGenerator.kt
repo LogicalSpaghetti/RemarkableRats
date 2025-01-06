@@ -8,6 +8,7 @@ class RemarkableRatsDataGenerator : DataGeneratorEntrypoint {
     override fun onInitializeDataGenerator(fabricDataGenerator: FabricDataGenerator) {
         val pack = fabricDataGenerator.createPack()
         pack.addProvider(::RatBlockTagProvider)
+        pack.addProvider(::RatEntityTagProvider)
         pack.addProvider(::RatItemTagProvider)
         pack.addProvider(::RatLootTableProvider)
         pack.addProvider(::RatModelProvider)

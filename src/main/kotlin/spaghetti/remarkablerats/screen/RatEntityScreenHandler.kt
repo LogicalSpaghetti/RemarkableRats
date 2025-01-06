@@ -30,6 +30,7 @@ class RatEntityScreenHandler(syncId: Int, playerInventory: PlayerInventory, priv
         for (row in 0..2) {
             for (column in 0..8) {
                 addSlot(Slot(playerInv, 9 + (column + (row * 9)), 8 + (column * 18), 84 + (row * 18)))
+
             }
         }
     }
