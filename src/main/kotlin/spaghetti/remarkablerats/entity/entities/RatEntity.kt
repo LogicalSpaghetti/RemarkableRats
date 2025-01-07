@@ -234,19 +234,10 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?) : Tam
         return ActionResult.success(world.isClient)
     }
 
+    override fun setFromBucket(isFromBucket: Boolean) { dataTracker.set(from_bucket, isFromBucket) }
     override fun isFromBucket(): Boolean = dataTracker.get(from_bucket)
-
-    override fun setFromBucket(isFromBucket: Boolean) {
-        dataTracker.set(from_bucket, isFromBucket)
-    }
-
-    override fun getBucketItem(): ItemStack {
-        return RatItems.bundle_of_rats.defaultStack
-    }
-
-    override fun getBucketFillSound(): SoundEvent {
-        return SoundEvents.ITEM_BUNDLE_INSERT
-    }
+    override fun getBucketItem(): ItemStack = RatItems.bundle_of_rats.defaultStack
+    override fun getBucketFillSound(): SoundEvent = SoundEvents.ITEM_BUNDLE_INSERT
 
     /*** VARIANT ***/
 
@@ -341,13 +332,8 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?) : Tam
 
     /*** Inventory behavior ***/
 
-    override fun clear() {
-        inventory.clear()
-    }
-
-    override fun size(): Int {
-        return inventory.size
-    }
+    override fun clear() { inventory.clear() }
+    override fun size(): Int = inventory.size
 
     override fun isEmpty(): Boolean {
         inventory.forEach { itemStack ->
@@ -381,9 +367,7 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?) : Tam
         stack.capCount(this.getMaxCount(stack))
     }
 
-    override fun markDirty() {
-
-    }
+    override fun markDirty() { }
 
     override fun canPlayerUse(player: PlayerEntity?): Boolean {
         return true

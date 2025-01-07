@@ -10,5 +10,7 @@
 
   "itemgroup.remarkablerats.remarkablerats_group" : "Remarkable Rats",
 
-  "subtitles.remarkablerats.rat_squeak" : "Rat Squeaks"
+  "subtitles.remarkablerats.rat_squeak" : "Rat Squeaks",
+
+  "screen.remarkablerats.open_inventory": "Open Inventory"
 }

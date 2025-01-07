@@ -2,13 +2,29 @@ package spaghetti.remarkablerats.screen
 
 import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.gui.screen.ingame.HandledScreen
+import net.minecraft.client.gui.tooltip.Tooltip
+import net.minecraft.client.gui.widget.ButtonWidget
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 import spaghetti.remarkablerats.id
 
-class RatEntityScreen(handler: RatEntityScreenHandler?, inventory: PlayerInventory, title: Text?) :
+class RatEntityScreen(handler: RatEntityScreenHandler, inventory: PlayerInventory, title: Text?) :
         HandledScreen<RatEntityScreenHandler?>(handler, inventory, title) {
+
+    private val inventoryButton: ButtonWidget = ButtonWidget.builder(Text.translatable("screen.remarkablerats.open_inventory")
+    ) { button ->
+        run {
+            // code here is run when the button is pressed!
+            spaghetti.remarkablerats.logger.info("Button $button Pressed")
+            handler.toggleSlotVisibility()
+        }
+    }
+            .size(100, 20)
+            .position(this.x, this.y)
+            .tooltip(Tooltip.of(Text.literal("Button Text")))
+            .build()
+
     override fun drawBackground(context: DrawContext, delta: Float, mouseX: Int, mouseY: Int) {
         context.drawTexture(texture, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight)
 
@@ -26,19 +42,12 @@ class RatEntityScreen(handler: RatEntityScreenHandler?, inventory: PlayerInvento
 //        }
     }
 
-//    override fun init() {
-//        super.init()
-//
-//        // This code is injected into the start of MinecraftServer.loadWorld()V
-//        addDrawableChild(ButtonWidget.builder(Text.translatable("screen.remarkablerats.open_inventory")
-//        ) { button ->
-//            run {
-//                // code here is run when the button is pressed!
-//                println("Button Pressed")
-//            }
-//        }.size(20, 20)
-//                .build())
-//    }
+    override fun init() {
+        super.init()
+        inventoryButton.setPosition(this.x, this.y - 20)
+        // This code is injected into the start of MinecraftServer.loadWorld()V
+        addDrawableChild(inventoryButton)
+    }
 
     companion object {
         private val texture: Identifier = id("textures/gui/single_slot_gui.png")
