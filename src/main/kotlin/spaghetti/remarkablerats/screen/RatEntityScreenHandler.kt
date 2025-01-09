@@ -12,7 +12,7 @@ class RatEntityScreenHandler(syncId: Int, playerInventory: PlayerInventory, priv
         ScreenHandler(RatScreenHandlers.ratScreenHandler, syncId) {
 //    private val context: ScreenHandlerContext = ScreenHandlerContext.create(ratEntity.world,
 //            BlockPos(Vec3i(ratEntity.pos.x.toInt(), ratEntity.pos.y.toInt(), ratEntity.pos.z.toInt())));
-    var slotsVisible = true
+private var slotsVisible = true
 
     // Client Constructor
     constructor(syncId: Int, playerInventory: PlayerInventory, payload: EntityIdPayload) : this(syncId, playerInventory,
@@ -27,18 +27,19 @@ class RatEntityScreenHandler(syncId: Int, playerInventory: PlayerInventory, priv
         hideSlots()
     }
 
-    private fun addPlayerInventory(playerInv: PlayerInventory) {
-        for (row in 0..2) {
-            for (column in 0..8) {
-                addSlot(ToggleableSlot(playerInv, 9 + (column + (row * 9)), 8 + (column * 18), 84 + (row * 18)))
-
+    private fun addInventory(inventory: Inventory) {
+        for (row in 0 ..< 3) {
+            for (column in 0 ..< 5) {
+                addSlot(ToggleableSlot(inventory, (column + (row * column)), 72 + 8 + (column * 18), /* TODO: Find exact offset*/16 + (row * 18)))
             }
         }
     }
-    private fun addInventory(inventory: Inventory) {
-        for (row in 0..2) {
-            for (column in 0..8) {
-                addSlot(ToggleableSlot(inventory, (column + (row * 9)), 8 + (column * 18), /* TODO: Find exact value*/16 + (row * 18)))
+
+    private fun addPlayerInventory(playerInv: PlayerInventory) {
+        for (row in 0 ..< 3) {
+            for (column in 0 ..< 9) {
+                addSlot(ToggleableSlot(playerInv, 9 + (column + (row * 9)), 8 + (column * 18), 84 + (row * 18)))
+
             }
         }
     }

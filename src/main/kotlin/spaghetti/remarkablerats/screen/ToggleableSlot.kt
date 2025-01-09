@@ -17,7 +17,7 @@ internal class ToggleableSlot(inventory: Inventory?, index: Int, x: Int, y: Int)
         isEnabled = false
     }
 
-    fun toggle() {
-        isEnabled = isEnabled xor true
-    }
+//    fun toggle() {
+//        isEnabled = isEnabled xor true
+//    }
 }

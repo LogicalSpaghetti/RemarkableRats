@@ -21,8 +21,7 @@ class RatEntityScreen(handler: RatEntityScreenHandler, inventory: PlayerInventor
         }
     }
             .size(100, 20)
-            .position(this.x, this.y)
-            .tooltip(Tooltip.of(Text.literal("Button Text")))
+            .tooltip(Tooltip.of(Text.translatable("screen.remarkablerats.open_inventory")))
             .build()
 
     override fun drawBackground(context: DrawContext, delta: Float, mouseX: Int, mouseY: Int) {
@@ -50,6 +49,6 @@ class RatEntityScreen(handler: RatEntityScreenHandler, inventory: PlayerInventor
     }
 
     companion object {
-        private val texture: Identifier = id("textures/gui/single_slot_gui.png")
+        private val texture: Identifier = id("textures/gui/generic_15.png")
     }
 }

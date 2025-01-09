@@ -31,7 +31,7 @@ class BundleOfRatsItem(type: EntityType<*>?, fluid: Fluid?, emptyingSound: Sound
         val itemStack = user.getStackInHand(hand)
         val blockHitResult = raycast(world, user, RaycastContext.FluidHandling.NONE)
 
-        // TODO: HitResult.Type.ENTITY, quick-deploy attack rat?
+        // TODO: HitResult.Type.ENTITY might allow for a quick-deploy attack rat
         // if a block was hit
         if (blockHitResult.type == HitResult.Type.BLOCK) {
             val blockPos = blockHitResult.blockPos

@@ -1,3 +1,5 @@
+Create a paper flow-chart of how the inventory layers should stack
+
 Add Rat Screen
     Menu
     Inventory

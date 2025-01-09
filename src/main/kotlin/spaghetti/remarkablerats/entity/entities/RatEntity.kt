@@ -50,12 +50,13 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?) : Tam
 
     val idleAnimationState: AnimationState = AnimationState()
     private var idleAnimationCooldown = 0
-    private var inventory: DefaultedList<ItemStack> = DefaultedList.ofSize(27, ItemStack.EMPTY)
+    private var inventory: DefaultedList<ItemStack> = DefaultedList.ofSize(inventorySize, ItemStack.EMPTY)
     private var wasSitting: Boolean = false;
 
     /*** Companions (static things) ***/
 
     companion object {
+        val inventorySize = 15
         private val variant: TrackedData<Int> =
                 DataTracker.registerData(RatEntity::class.java, TrackedDataHandlerRegistry.INTEGER)
         private val outfit_color: TrackedData<Int> =
@@ -276,15 +277,9 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?) : Tam
 
     private fun tamedInteraction(stack: ItemStack, player: PlayerEntity, item: Item, hand: Hand): ActionResult {
         val actionResult: ActionResult
-        // healing
-        if (this.isBreedingItem(stack) && this.health < this.maxHealth) {
-            if (!player.abilities.creativeMode) {
-                stack.decrement(1)
-            }
-            if (stack.contains(DataComponentTypes.FOOD)) {
-                stack.get(DataComponentTypes.FOOD)?.let { this.heal(it.saturation) }
-            }
-            return ActionResult.SUCCESS
+        // eating
+        if (this.isBreedingItem(stack)) {
+            if ((consumeItem(player, stack, hand).also { actionResult = it }).isAccepted) return actionResult
         }
 
         // unless the interacting player is the owner, no more interactions are possible
@@ -302,11 +297,6 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?) : Tam
             return ActionResult.SUCCESS
         }
 
-        // TODO: Clean up
-        // breeding
-        if ((super.interactMob(player, hand).also { actionResult = it }).isAccepted) return actionResult
-
-
         // TODO: decide if opening inventory should always take priority and all other actions should require sneaking
         // sitting or opening inventory
         if (player.isSneaking) {
@@ -319,6 +309,41 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?) : Tam
             player.openHandledScreen(this)
             return ActionResult.SUCCESS
         }
+    }
+
+    private fun consumeItem(player: PlayerEntity, stack: ItemStack,
+            hand: Hand): ActionResult {
+        // healing
+        if (this.health < this.maxHealth) {
+            if (!player.abilities.creativeMode) {
+                stack.decrement(1)
+            }
+            if (stack.contains(DataComponentTypes.FOOD)) {
+                stack.get(DataComponentTypes.FOOD)?.let { this.heal(it.saturation) }
+            }
+            return ActionResult.SUCCESS
+        }
+
+        // Breeding
+        val i = this.getBreedingAge()
+        if (!world.isClient && i == 0 && this.canEat()) {
+            this.eat(player, hand, stack)
+            this.lovePlayer(player)
+            return ActionResult.SUCCESS
+        }
+
+        // growing
+        if (this.isBaby) {
+            this.eat(player, hand, stack)
+            this.growUp(toGrowUpAge(-i), true)
+            return ActionResult.success(world.isClient)
+        }
+
+        if (world.isClient) {
+            return ActionResult.CONSUME
+        }
+
+        return ActionResult.PASS
     }
 
     /*** Outfits ***/
