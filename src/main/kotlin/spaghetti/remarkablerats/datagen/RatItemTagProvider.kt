@@ -4,7 +4,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider
 import net.minecraft.item.Items
 import net.minecraft.registry.RegistryWrapper.WrapperLookup
-import spaghetti.remarkablerats.tags.RatTags.Items.rat_consumable_items
+import spaghetti.remarkablerats.data.RatTags.Items.rat_consumable_items
 import java.util.concurrent.CompletableFuture
 
 

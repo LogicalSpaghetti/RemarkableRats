@@ -1,0 +1,25 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "remarkablerats:item/rat_top_hat"
+  },
+  "overrides": [
+    { "predicate": { "remarkablerats:color": 0 }, "model": "remarkablerats:item/rat_top_hat/white" },
+    { "predicate": { "remarkablerats:color": 0.0625 }, "model": "remarkablerats:item/rat_top_hat/orange" },
+    { "predicate": { "remarkablerats:color": 0.125 }, "model": "remarkablerats:item/rat_top_hat/magenta" },
+    { "predicate": { "remarkablerats:color": 0.1875 }, "model": "remarkablerats:item/rat_top_hat/light_blue" },
+    { "predicate": { "remarkablerats:color": 0.25 }, "model": "remarkablerats:item/rat_top_hat/yellow" },
+    { "predicate": { "remarkablerats:color": 0.3125 }, "model": "remarkablerats:item/rat_top_hat/lime" },
+    { "predicate": { "remarkablerats:color": 0.375 }, "model": "remarkablerats:item/rat_top_hat/pink" },
+    { "predicate": { "remarkablerats:color": 0.4375 }, "model": "remarkablerats:item/rat_top_hat/gray" },
+    { "predicate": { "remarkablerats:color": 0.5 }, "model": "remarkablerats:item/rat_top_hat/light_gray" },
+    { "predicate": { "remarkablerats:color": 0.5625 }, "model": "remarkablerats:item/rat_top_hat/cyan" },
+    { "predicate": { "remarkablerats:color": 0.625 }, "model": "remarkablerats:item/rat_top_hat/purple" },
+    { "predicate": { "remarkablerats:color": 0.6875 }, "model": "remarkablerats:item/rat_top_hat/blue" },
+    { "predicate": { "remarkablerats:color": 0.75 }, "model": "remarkablerats:item/rat_top_hat/brown" },
+    { "predicate": { "remarkablerats:color": 0.8125 }, "model": "remarkablerats:item/rat_top_hat/green" },
+    { "predicate": { "remarkablerats:color": 0.875 }, "model": "remarkablerats:item/rat_top_hat/red" },
+    { "predicate": { "remarkablerats:color": 0.9375 }, "model": "remarkablerats:item/rat_top_hat/black" },
+    { "predicate": { "remarkablerats:color": 1 }, "model": "remarkablerats:item/ratatouille" }
+  ]
+}

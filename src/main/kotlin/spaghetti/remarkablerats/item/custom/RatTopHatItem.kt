@@ -8,7 +8,7 @@ import net.minecraft.registry.tag.BlockTags
 import net.minecraft.text.Text
 import net.minecraft.util.ActionResult
 import net.minecraft.util.DyeColor
-import spaghetti.remarkablerats.component.RatDataComponentTypes
+import spaghetti.remarkablerats.data.RatDataComponentTypes
 
 class RatTopHatItem(settings: Settings) : Item(settings) {
 

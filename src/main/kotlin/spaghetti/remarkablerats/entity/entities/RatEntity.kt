@@ -41,7 +41,7 @@ import spaghetti.remarkablerats.item.RatItems
 import spaghetti.remarkablerats.network.EntityIdPayload
 import spaghetti.remarkablerats.screen.RatEntityScreenHandler
 import spaghetti.remarkablerats.sound.RatSounds
-import spaghetti.remarkablerats.tags.RatTags.Items.rat_consumable_items
+import spaghetti.remarkablerats.data.RatTags.Items.rat_consumable_items
 
 class RatEntity(entityType: EntityType<out TameableEntity>, world: World?) : TameableEntity(entityType, world),
         Bucketable, Inventory, ExtendedScreenHandlerFactory<EntityIdPayload> {

@@ -5,7 +5,7 @@ import net.minecraft.util.Identifier
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spaghetti.remarkablerats.block.RatBlocks
-import spaghetti.remarkablerats.component.RatDataComponentTypes
+import spaghetti.remarkablerats.data.RatDataComponentTypes
 import spaghetti.remarkablerats.entity.RatEntities
 import spaghetti.remarkablerats.item.RatItemGroups
 import spaghetti.remarkablerats.item.RatItems

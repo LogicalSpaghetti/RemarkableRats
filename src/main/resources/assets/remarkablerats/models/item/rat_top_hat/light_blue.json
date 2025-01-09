@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "remarkablerats:item/rat_top_hat/light_blue"
+  }
+}

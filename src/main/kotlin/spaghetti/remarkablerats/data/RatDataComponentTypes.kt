@@ -1,4 +1,4 @@
-package spaghetti.remarkablerats.component
+package spaghetti.remarkablerats.data
 
 import net.minecraft.component.ComponentType
 import net.minecraft.registry.Registries
