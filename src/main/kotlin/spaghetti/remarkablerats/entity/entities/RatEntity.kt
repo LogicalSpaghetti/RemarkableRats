@@ -36,12 +36,15 @@ import net.minecraft.util.collection.DefaultedList
 import net.minecraft.world.LocalDifficulty
 import net.minecraft.world.ServerWorldAccess
 import net.minecraft.world.World
+import spaghetti.remarkablerats.data.RatDataComponentTypes
 import spaghetti.remarkablerats.entity.RatEntities
 import spaghetti.remarkablerats.item.RatItems
 import spaghetti.remarkablerats.network.EntityIdPayload
 import spaghetti.remarkablerats.screen.RatEntityScreenHandler
 import spaghetti.remarkablerats.sound.RatSounds
 import spaghetti.remarkablerats.data.RatTags.Items.rat_consumable_items
+import spaghetti.remarkablerats.item.custom.RatTopHatItem
+import spaghetti.remarkablerats.logger
 
 class RatEntity(entityType: EntityType<out TameableEntity>, world: World?) : TameableEntity(entityType, world),
         Bucketable, Inventory, ExtendedScreenHandlerFactory<EntityIdPayload> {
@@ -50,13 +53,13 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?) : Tam
 
     val idleAnimationState: AnimationState = AnimationState()
     private var idleAnimationCooldown = 0
-    private var inventory: DefaultedList<ItemStack> = DefaultedList.ofSize(inventorySize, ItemStack.EMPTY)
+    private var inventory: DefaultedList<ItemStack> = DefaultedList.ofSize(inventory_size, ItemStack.EMPTY)
     private var wasSitting: Boolean = false;
 
     /*** Companions (static things) ***/
 
     companion object {
-        val inventorySize = 15
+        const val inventory_size = 15
         private val variant: TrackedData<Int> =
                 DataTracker.registerData(RatEntity::class.java, TrackedDataHandlerRegistry.INTEGER)
         private val outfit_color: TrackedData<Int> =
@@ -280,6 +283,29 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?) : Tam
         // eating
         if (this.isBreedingItem(stack)) {
             if ((consumeItem(player, stack, hand).also { actionResult = it }).isAccepted) return actionResult
+        }
+        
+        if(stack.isOf(RatItems.rat_top_hat)) {
+            when(stack.get(RatDataComponentTypes.color)) {
+                DyeColor.WHITE -> this.isAiDisabled xor true
+                DyeColor.ORANGE -> TODO()
+                DyeColor.MAGENTA -> TODO()
+                DyeColor.LIGHT_BLUE -> TODO()
+                DyeColor.YELLOW -> TODO()
+                DyeColor.LIME -> TODO()
+                DyeColor.PINK -> TODO()
+                DyeColor.GRAY -> TODO()
+                DyeColor.LIGHT_GRAY -> TODO()
+                DyeColor.CYAN -> TODO()
+                DyeColor.PURPLE -> TODO()
+                DyeColor.BLUE -> TODO()
+                DyeColor.BROWN -> TODO()
+                DyeColor.GREEN -> TODO()
+                DyeColor.RED -> TODO()
+                DyeColor.BLACK -> TODO()
+                null -> TODO()
+            }
+            return ActionResult.SUCCESS
         }
 
         // unless the interacting player is the owner, no more interactions are possible

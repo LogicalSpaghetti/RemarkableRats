@@ -6,7 +6,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry
 import net.minecraft.client.gui.screen.ingame.HandledScreens
 import spaghetti.remarkablerats.data.RatModelPredicates
 import spaghetti.remarkablerats.entity.RatEntities
-import spaghetti.remarkablerats.entity.client.RatModelLayers
+import spaghetti.remarkablerats.entity.RatModelLayers
 import spaghetti.remarkablerats.entity.entities.RatModel
 import spaghetti.remarkablerats.entity.entities.RatRenderer
 import spaghetti.remarkablerats.screen.RatEntityScreen

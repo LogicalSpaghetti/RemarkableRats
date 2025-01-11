@@ -1,4 +1,4 @@
-package spaghetti.remarkablerats.entity.client
+package spaghetti.remarkablerats.entity
 
 import net.minecraft.client.render.entity.model.EntityModelLayer
 import spaghetti.remarkablerats.id

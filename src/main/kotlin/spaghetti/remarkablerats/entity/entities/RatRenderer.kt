@@ -5,7 +5,7 @@ import net.minecraft.client.render.entity.EntityRendererFactory
 import net.minecraft.client.render.entity.MobEntityRenderer
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.Identifier
-import spaghetti.remarkablerats.entity.client.RatModelLayers
+import spaghetti.remarkablerats.entity.RatModelLayers
 import spaghetti.remarkablerats.id
 
 class RatRenderer(context: EntityRendererFactory.Context) :
