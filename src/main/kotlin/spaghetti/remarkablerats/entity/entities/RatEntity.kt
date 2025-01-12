@@ -5,6 +5,8 @@ package spaghetti.remarkablerats.entity.entities
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory
 import net.minecraft.advancement.criterion.Criteria
+import net.minecraft.block.Block
+import net.minecraft.block.Blocks
 import net.minecraft.component.DataComponentTypes
 import net.minecraft.component.type.NbtComponent
 import net.minecraft.entity.*
@@ -37,24 +39,24 @@ import net.minecraft.world.LocalDifficulty
 import net.minecraft.world.ServerWorldAccess
 import net.minecraft.world.World
 import spaghetti.remarkablerats.data.RatDataComponentTypes
+import spaghetti.remarkablerats.data.RatTags.Items.rat_consumable_items
 import spaghetti.remarkablerats.entity.RatEntities
+import spaghetti.remarkablerats.entity.goal.PathToTargetedBlockTypeGoal
+import spaghetti.remarkablerats.entity.interfaces.HasTargetedBlockTypes
 import spaghetti.remarkablerats.item.RatItems
 import spaghetti.remarkablerats.network.EntityIdPayload
 import spaghetti.remarkablerats.screen.RatEntityScreenHandler
 import spaghetti.remarkablerats.sound.RatSounds
-import spaghetti.remarkablerats.data.RatTags.Items.rat_consumable_items
-import spaghetti.remarkablerats.item.custom.RatTopHatItem
-import spaghetti.remarkablerats.logger
 
 class RatEntity(entityType: EntityType<out TameableEntity>, world: World?) : TameableEntity(entityType, world),
-        Bucketable, Inventory, ExtendedScreenHandlerFactory<EntityIdPayload> {
+        Bucketable, Inventory, ExtendedScreenHandlerFactory<EntityIdPayload>, HasTargetedBlockTypes {
 
     /*** Variables ***/
-
     val idleAnimationState: AnimationState = AnimationState()
     private var idleAnimationCooldown = 0
     private var inventory: DefaultedList<ItemStack> = DefaultedList.ofSize(inventory_size, ItemStack.EMPTY)
     private var wasSitting: Boolean = false;
+    override var currentlyTargetedBlockType: Block? = null;
 
     /*** Companions (static things) ***/
 
@@ -83,21 +85,33 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?) : Tam
     }
 
     override fun initGoals() {
-        goalSelector.add(0, SwimGoal(this))
-        goalSelector.add(0, PowderSnowJumpGoal(this, this.world))
-        goalSelector.add(1, EscapeDangerGoal(this, 1.0))
-        goalSelector.add(2, SitGoal(this))
-        goalSelector.add(4, PounceAtTargetGoal(this, 0.4f))
-        goalSelector.add(5, MeleeAttackGoal(this, 1.0, true))
-        goalSelector.add(6, FollowOwnerGoal(this, 1.0, 10.0f, 2.0f))
-        goalSelector.add(7, AnimalMateGoal(this, 1.0))
-        goalSelector.add(8, WanderAroundFarGoal(this, 1.0))
-        goalSelector.add(10, LookAtEntityGoal(this, PlayerEntity::class.java, 8.0f))
-        goalSelector.add(10, LookAroundGoal(this))
+        val goals = arrayOf(
+                SwimGoal(this),
+                PowderSnowJumpGoal(this, this.world),
+                EscapeDangerGoal(this, 1.0),
 
-        targetSelector.add(1, TrackOwnerAttackerGoal(this))
-        targetSelector.add(2, AttackWithOwnerGoal(this))
-        targetSelector.add(3, RevengeGoal(this).setGroupRevenge())
+                AttackWithOwnerGoal(this),
+                TrackOwnerAttackerGoal(this),
+                RevengeGoal(this).setGroupRevenge(),
+
+                SitGoal(this),
+                // TODO: reduce velocity at some point
+                PounceAtTargetGoal(this, 1.0f),
+                MeleeAttackGoal(this, 1.0, true),
+
+                FollowOwnerGoal(this, 1.0, 10.0f, 2.0f),
+                AnimalMateGoal(this, 1.0),
+
+                PathToTargetedBlockTypeGoal(this),
+
+                WanderAroundFarGoal(this, 1.0),
+                LookAtEntityGoal(this, PlayerEntity::class.java, 8.0f),
+                LookAroundGoal(this),
+                )
+
+        for (i in goals.indices) {
+            goalSelector.add(i, goals[i])
+        }
     }
 
     private fun setupAnimationStates() {
@@ -156,6 +170,8 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?) : Tam
         nbt.putInt("OutfitColor", getOutfitColor().id)
         nbt.putBoolean("FromBucket", isFromBucket)
         nbt.putInt("Age", this.getBreedingAge())
+        if (currentlyTargetedBlockType != null)
+            nbt.putInt("TargetedBlock", Item.getRawId(currentlyTargetedBlockType?.asItem()))
 
         //inventory
         val nbtList = NbtList()
@@ -175,6 +191,8 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?) : Tam
         this.dataTracker.set(variant, nbt.getInt("Variant"))
         if (nbt.contains("OutfitColor")) this.dataTracker.set(outfit_color, nbt.getInt("OutfitColor"))
         if (nbt.contains("Age")) this.setBreedingAge(nbt.getInt("Age"))
+        if (nbt.contains("TargetedBlock"))
+            currentlyTargetedBlockType = Block.getBlockFromItem(Item.byRawId(nbt.getInt("TargetedBlock")))
 
         // inventory
         val nbtList = nbt.getList("Items", NbtElement.COMPOUND_TYPE.toInt())
@@ -286,26 +304,7 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?) : Tam
         }
         
         if(stack.isOf(RatItems.rat_top_hat)) {
-            when(stack.get(RatDataComponentTypes.color)) {
-                DyeColor.WHITE -> this.isAiDisabled xor true
-                DyeColor.ORANGE -> TODO()
-                DyeColor.MAGENTA -> TODO()
-                DyeColor.LIGHT_BLUE -> TODO()
-                DyeColor.YELLOW -> TODO()
-                DyeColor.LIME -> TODO()
-                DyeColor.PINK -> TODO()
-                DyeColor.GRAY -> TODO()
-                DyeColor.LIGHT_GRAY -> TODO()
-                DyeColor.CYAN -> TODO()
-                DyeColor.PURPLE -> TODO()
-                DyeColor.BLUE -> TODO()
-                DyeColor.BROWN -> TODO()
-                DyeColor.GREEN -> TODO()
-                DyeColor.RED -> TODO()
-                DyeColor.BLACK -> TODO()
-                null -> TODO()
-            }
-            return ActionResult.SUCCESS
+            return topHatFunctionality(stack)
         }
 
         // unless the interacting player is the owner, no more interactions are possible
@@ -335,6 +334,35 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?) : Tam
             player.openHandledScreen(this)
             return ActionResult.SUCCESS
         }
+    }
+
+    // TODO: use villager workstation code for pathfinding,
+    // TODO: find ways to set looking direction, prevent distractions,
+    // TODO: interactions and world detections are easy since we have this.world;
+    private fun topHatFunctionality(stack: ItemStack): ActionResult {
+
+
+
+        when (stack.get(RatDataComponentTypes.color)) {
+            DyeColor.WHITE      -> this.isSitting xor true
+            DyeColor.ORANGE     -> currentlyTargetedBlockType = Blocks.ORANGE_WOOL;
+            DyeColor.MAGENTA    -> currentlyTargetedBlockType = Blocks.MAGENTA_WOOL;
+            DyeColor.LIGHT_BLUE -> currentlyTargetedBlockType = Blocks.LIGHT_BLUE_WOOL;
+            DyeColor.YELLOW     -> TODO()
+            DyeColor.LIME       -> TODO()
+            DyeColor.PINK       -> TODO()
+            DyeColor.GRAY       -> TODO()
+            DyeColor.LIGHT_GRAY -> TODO()
+            DyeColor.CYAN       -> TODO()
+            DyeColor.PURPLE     -> TODO()
+            DyeColor.BLUE       -> TODO()
+            DyeColor.BROWN      -> TODO()
+            DyeColor.GREEN      -> TODO()
+            DyeColor.RED        -> TODO()
+            DyeColor.BLACK      -> TODO()
+            null                -> TODO()
+        }
+        return ActionResult.SUCCESS
     }
 
     private fun consumeItem(player: PlayerEntity, stack: ItemStack,

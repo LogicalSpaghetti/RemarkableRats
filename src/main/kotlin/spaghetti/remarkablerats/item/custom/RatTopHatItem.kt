@@ -1,5 +1,6 @@
 package spaghetti.remarkablerats.item.custom
 
+import net.minecraft.block.Blocks
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
@@ -39,11 +40,25 @@ class RatTopHatItem(settings: Settings) : Item(settings) {
         val blockState = context.world.getBlockState(context.blockPos)
 
         if (blockState.isIn(BlockTags.WOOL)) {
-            itemStack.set(RatDataComponentTypes.color, DyeColor.RED)
-        } else if (blockState.isIn(BlockTags.TERRACOTTA)) {
-            itemStack.set(RatDataComponentTypes.color, DyeColor.BLUE)
-        } else {
-            itemStack.set(RatDataComponentTypes.color, DyeColor.GREEN)
+            itemStack.set(RatDataComponentTypes.color, when (blockState.block) {
+                Blocks.WHITE_WOOL      -> DyeColor.WHITE
+                Blocks.ORANGE_WOOL     -> DyeColor.ORANGE
+                Blocks.MAGENTA_WOOL    -> DyeColor.MAGENTA
+                Blocks.LIGHT_BLUE_WOOL -> DyeColor.LIGHT_BLUE
+                Blocks.YELLOW_WOOL     -> DyeColor.YELLOW
+                Blocks.LIME_WOOL       -> DyeColor.LIME
+                Blocks.PINK_WOOL       -> DyeColor.PINK
+                Blocks.MAGENTA_WOOL    -> DyeColor.GRAY
+                Blocks.LIGHT_GRAY_WOOL -> DyeColor.LIGHT_GRAY
+                Blocks.CYAN_WOOL       -> DyeColor.CYAN
+                Blocks.PURPLE_WOOL     -> DyeColor.PURPLE
+                Blocks.BLUE_WOOL       -> DyeColor.BLUE
+                Blocks.BROWN_WOOL      -> DyeColor.BROWN
+                Blocks.GREEN_WOOL      -> DyeColor.GREEN
+                Blocks.RED_WOOL        -> DyeColor.RED
+                else                   -> DyeColor.BLACK
+            })
+            return ActionResult.SUCCESS
         }
 
         return super.useOnBlock(context)
