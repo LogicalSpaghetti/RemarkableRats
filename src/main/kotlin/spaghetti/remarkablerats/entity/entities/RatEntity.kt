@@ -41,22 +41,21 @@ import net.minecraft.world.World
 import spaghetti.remarkablerats.data.RatDataComponentTypes
 import spaghetti.remarkablerats.data.RatTags.Items.rat_consumable_items
 import spaghetti.remarkablerats.entity.RatEntities
+import spaghetti.remarkablerats.entity.abstracts.CommandedEntity
 import spaghetti.remarkablerats.entity.goal.PathToTargetedBlockTypeGoal
-import spaghetti.remarkablerats.entity.interfaces.HasTargetedBlockTypes
 import spaghetti.remarkablerats.item.RatItems
 import spaghetti.remarkablerats.network.EntityIdPayload
 import spaghetti.remarkablerats.screen.RatEntityScreenHandler
 import spaghetti.remarkablerats.sound.RatSounds
 
-class RatEntity(entityType: EntityType<out TameableEntity>, world: World?) : TameableEntity(entityType, world),
-        Bucketable, Inventory, ExtendedScreenHandlerFactory<EntityIdPayload>, HasTargetedBlockTypes {
+class RatEntity(entityType: EntityType<out TameableEntity>, world: World) : CommandedEntity(entityType, world),
+        Bucketable, Inventory, ExtendedScreenHandlerFactory<EntityIdPayload> {
 
     /*** Variables ***/
     val idleAnimationState: AnimationState = AnimationState()
     private var idleAnimationCooldown = 0
     private var inventory: DefaultedList<ItemStack> = DefaultedList.ofSize(inventory_size, ItemStack.EMPTY)
     private var wasSitting: Boolean = false;
-    override var currentlyTargetedBlockType: Block? = null;
 
     /*** Companions (static things) ***/
 
@@ -109,6 +108,7 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?) : Tam
                 LookAroundGoal(this),
                 )
 
+        // TODO: temporary solution until all goals are correctly ordered, some goals should have the same priority (figure out why)
         for (i in goals.indices) {
             goalSelector.add(i, goals[i])
         }
@@ -170,9 +170,8 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?) : Tam
         nbt.putInt("OutfitColor", getOutfitColor().id)
         nbt.putBoolean("FromBucket", isFromBucket)
         nbt.putInt("Age", this.getBreedingAge())
-        if (currentlyTargetedBlockType != null)
-            nbt.putInt("TargetedBlock", Item.getRawId(currentlyTargetedBlockType?.asItem()))
-
+        if (targetedBlockType != null)
+            nbt.putInt("TargetedBlock", Item.getRawId(targetedBlockType?.asItem()))
         //inventory
         val nbtList = NbtList()
         for (i in 1..<inventory.size) {
@@ -192,7 +191,7 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?) : Tam
         if (nbt.contains("OutfitColor")) this.dataTracker.set(outfit_color, nbt.getInt("OutfitColor"))
         if (nbt.contains("Age")) this.setBreedingAge(nbt.getInt("Age"))
         if (nbt.contains("TargetedBlock"))
-            currentlyTargetedBlockType = Block.getBlockFromItem(Item.byRawId(nbt.getInt("TargetedBlock")))
+            targetedBlockType = Block.getBlockFromItem(Item.byRawId(nbt.getInt("TargetedBlock")))
 
         // inventory
         val nbtList = nbt.getList("Items", NbtElement.COMPOUND_TYPE.toInt())
@@ -336,31 +335,25 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World?) : Tam
         }
     }
 
-    // TODO: use villager workstation code for pathfinding,
-    // TODO: find ways to set looking direction, prevent distractions,
-    // TODO: interactions and world detections are easy since we have this.world;
     private fun topHatFunctionality(stack: ItemStack): ActionResult {
-
-
-
         when (stack.get(RatDataComponentTypes.color)) {
-            DyeColor.WHITE      -> this.isSitting xor true
-            DyeColor.ORANGE     -> currentlyTargetedBlockType = Blocks.ORANGE_WOOL;
-            DyeColor.MAGENTA    -> currentlyTargetedBlockType = Blocks.MAGENTA_WOOL;
-            DyeColor.LIGHT_BLUE -> currentlyTargetedBlockType = Blocks.LIGHT_BLUE_WOOL;
-            DyeColor.YELLOW     -> TODO()
-            DyeColor.LIME       -> TODO()
-            DyeColor.PINK       -> TODO()
-            DyeColor.GRAY       -> TODO()
-            DyeColor.LIGHT_GRAY -> TODO()
-            DyeColor.CYAN       -> TODO()
-            DyeColor.PURPLE     -> TODO()
-            DyeColor.BLUE       -> TODO()
-            DyeColor.BROWN      -> TODO()
-            DyeColor.GREEN      -> TODO()
-            DyeColor.RED        -> TODO()
-            DyeColor.BLACK      -> TODO()
-            null                -> TODO()
+            DyeColor.WHITE      -> targetedBlockType = Blocks.WHITE_WOOL
+            DyeColor.ORANGE     -> targetedBlockType = Blocks.ORANGE_WOOL
+            DyeColor.MAGENTA    -> targetedBlockType = Blocks.MAGENTA_WOOL
+            DyeColor.LIGHT_BLUE -> targetedBlockType = Blocks.LIGHT_BLUE_WOOL
+            DyeColor.YELLOW     -> targetedBlockType = Blocks.YELLOW_WOOL
+            DyeColor.LIME       -> targetedBlockType = Blocks.LIME_WOOL
+            DyeColor.PINK       -> targetedBlockType = Blocks.PINK_WOOL
+            DyeColor.GRAY       -> targetedBlockType = Blocks.GRAY_WOOL
+            DyeColor.LIGHT_GRAY -> targetedBlockType = Blocks.LIGHT_GRAY_WOOL
+            DyeColor.CYAN       -> targetedBlockType = Blocks.CYAN_WOOL
+            DyeColor.PURPLE     -> targetedBlockType = Blocks.PURPLE_WOOL
+            DyeColor.BLUE       -> targetedBlockType = Blocks.BLUE_WOOL
+            DyeColor.BROWN      -> targetedBlockType = Blocks.BROWN_WOOL
+            DyeColor.GREEN      -> targetedBlockType = Blocks.GREEN_WOOL
+            DyeColor.RED        -> targetedBlockType = Blocks.RED_WOOL
+            DyeColor.BLACK      -> targetedBlockType = Blocks.BLACK_WOOL
+            null                -> targetedBlockType = Blocks.BLACK_WOOL
         }
         return ActionResult.SUCCESS
     }
