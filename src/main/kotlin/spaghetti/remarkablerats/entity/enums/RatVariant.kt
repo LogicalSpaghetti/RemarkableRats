@@ -1,4 +1,4 @@
-package spaghetti.remarkablerats.entity.entities
+package spaghetti.remarkablerats.entity.enums
 
 import net.minecraft.util.Util
 import net.minecraft.util.function.ValueLists
@@ -6,6 +6,7 @@ import net.minecraft.util.math.random.Random
 import java.util.function.IntFunction
 import kotlin.enums.enumEntries
 
+// TODO: there's probably a more abstract way of handling this that allows for custom variants
 enum class RatVariant(val id: Int, val color: String) {
     // every new variant needs to be listed here,
     // given a texture,

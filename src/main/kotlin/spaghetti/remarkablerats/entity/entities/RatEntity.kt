@@ -6,7 +6,6 @@ package spaghetti.remarkablerats.entity.entities
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory
 import net.minecraft.advancement.criterion.Criteria
 import net.minecraft.block.Block
-import net.minecraft.block.Blocks
 import net.minecraft.component.DataComponentTypes
 import net.minecraft.component.type.NbtComponent
 import net.minecraft.entity.*
@@ -31,6 +30,7 @@ import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.SoundEvent
 import net.minecraft.sound.SoundEvents
+import net.minecraft.text.Text
 import net.minecraft.util.ActionResult
 import net.minecraft.util.DyeColor
 import net.minecraft.util.Hand
@@ -42,7 +42,8 @@ import spaghetti.remarkablerats.data.RatDataComponentTypes
 import spaghetti.remarkablerats.data.RatTags.Items.rat_consumable_items
 import spaghetti.remarkablerats.entity.RatEntities
 import spaghetti.remarkablerats.entity.abstracts.CommandedEntity
-import spaghetti.remarkablerats.entity.goal.PathToTargetedBlockTypeGoal
+import spaghetti.remarkablerats.entity.enums.RatVariant
+import spaghetti.remarkablerats.entity.goals.PathToTargetedBlockTypeGoal
 import spaghetti.remarkablerats.item.RatItems
 import spaghetti.remarkablerats.network.EntityIdPayload
 import spaghetti.remarkablerats.screen.RatEntityScreenHandler
@@ -52,6 +53,7 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World) : Comm
         Bucketable, Inventory, ExtendedScreenHandlerFactory<EntityIdPayload> {
 
     /*** Variables ***/
+
     val idleAnimationState: AnimationState = AnimationState()
     private var idleAnimationCooldown = 0
     private var inventory: DefaultedList<ItemStack> = DefaultedList.ofSize(inventory_size, ItemStack.EMPTY)
@@ -101,7 +103,7 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World) : Comm
                 FollowOwnerGoal(this, 1.0, 10.0f, 2.0f),
                 AnimalMateGoal(this, 1.0),
 
-                PathToTargetedBlockTypeGoal(this),
+                PathToTargetedBlockTypeGoal(this, 1.0, 12),
 
                 WanderAroundFarGoal(this, 1.0),
                 LookAtEntityGoal(this, PlayerEntity::class.java, 8.0f),
@@ -155,6 +157,8 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World) : Comm
         else super.interactMob(player, hand)
     }
 
+
+
     /*** NBT save/load ***/
 
     override fun initDataTracker(builder: DataTracker.Builder) {
@@ -171,8 +175,8 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World) : Comm
         nbt.putBoolean("FromBucket", isFromBucket)
         nbt.putInt("Age", this.getBreedingAge())
         if (targetedBlockType != null)
-            nbt.putInt("TargetedBlock", Item.getRawId(targetedBlockType?.asItem()))
-        //inventory
+            nbt.putInt("TargetedBlockStateId", Block.getRawIdFromState(targetedBlockType))
+        // Inventory
         val nbtList = NbtList()
         for (i in 1..<inventory.size) {
             val itemStack: ItemStack = inventory[i]
@@ -191,9 +195,9 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World) : Comm
         if (nbt.contains("OutfitColor")) this.dataTracker.set(outfit_color, nbt.getInt("OutfitColor"))
         if (nbt.contains("Age")) this.setBreedingAge(nbt.getInt("Age"))
         if (nbt.contains("TargetedBlock"))
-            targetedBlockType = Block.getBlockFromItem(Item.byRawId(nbt.getInt("TargetedBlock")))
+            targetedBlockType = Block.getStateFromRawId(nbt.getInt("TargetedBlock"))
 
-        // inventory
+        // Inventory i1IlL
         val nbtList = nbt.getList("Items", NbtElement.COMPOUND_TYPE.toInt())
         for (i in nbtList.indices) {
             val nbtCompound = nbtList.getCompound(i)
@@ -303,7 +307,7 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World) : Comm
         }
         
         if(stack.isOf(RatItems.rat_top_hat)) {
-            return topHatFunctionality(stack)
+            return topHatFunctionality(stack, player)
         }
 
         // unless the interacting player is the owner, no more interactions are possible
@@ -335,25 +339,26 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World) : Comm
         }
     }
 
-    private fun topHatFunctionality(stack: ItemStack): ActionResult {
+    private fun topHatFunctionality(stack: ItemStack, player: PlayerEntity): ActionResult {
+        this.dataTracker;
         when (stack.get(RatDataComponentTypes.color)) {
-            DyeColor.WHITE      -> targetedBlockType = Blocks.WHITE_WOOL
-            DyeColor.ORANGE     -> targetedBlockType = Blocks.ORANGE_WOOL
-            DyeColor.MAGENTA    -> targetedBlockType = Blocks.MAGENTA_WOOL
-            DyeColor.LIGHT_BLUE -> targetedBlockType = Blocks.LIGHT_BLUE_WOOL
-            DyeColor.YELLOW     -> targetedBlockType = Blocks.YELLOW_WOOL
-            DyeColor.LIME       -> targetedBlockType = Blocks.LIME_WOOL
-            DyeColor.PINK       -> targetedBlockType = Blocks.PINK_WOOL
-            DyeColor.GRAY       -> targetedBlockType = Blocks.GRAY_WOOL
-            DyeColor.LIGHT_GRAY -> targetedBlockType = Blocks.LIGHT_GRAY_WOOL
-            DyeColor.CYAN       -> targetedBlockType = Blocks.CYAN_WOOL
-            DyeColor.PURPLE     -> targetedBlockType = Blocks.PURPLE_WOOL
-            DyeColor.BLUE       -> targetedBlockType = Blocks.BLUE_WOOL
-            DyeColor.BROWN      -> targetedBlockType = Blocks.BROWN_WOOL
-            DyeColor.GREEN      -> targetedBlockType = Blocks.GREEN_WOOL
-            DyeColor.RED        -> targetedBlockType = Blocks.RED_WOOL
-            DyeColor.BLACK      -> targetedBlockType = Blocks.BLACK_WOOL
-            null                -> targetedBlockType = Blocks.BLACK_WOOL
+            DyeColor.WHITE      -> {}
+            DyeColor.ORANGE     -> {}
+            DyeColor.MAGENTA    -> {}
+            DyeColor.LIGHT_BLUE -> {}
+            DyeColor.YELLOW     -> {}
+            DyeColor.LIME       -> {}
+            DyeColor.PINK       -> {}
+            DyeColor.GRAY       -> {}
+            DyeColor.LIGHT_GRAY -> {}
+            DyeColor.CYAN       -> {}
+            DyeColor.PURPLE     -> {}
+            DyeColor.BLUE       -> {}
+            DyeColor.BROWN      -> {}
+            DyeColor.GREEN      -> targetedBlockType = stack.get(RatDataComponentTypes.blockState)
+            DyeColor.RED        -> {}
+            DyeColor.BLACK      -> {}
+            null                -> player.sendMessage(Text.literal("Hat color is null"))
         }
         return ActionResult.SUCCESS
     }
@@ -400,6 +405,10 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World) : Comm
 
     private fun setOutfitColor(color: DyeColor) {
         dataTracker.set(outfit_color, color.id)
+    }
+
+    override fun reachedTarget() {
+
     }
 
     /*** Inventory behavior ***/

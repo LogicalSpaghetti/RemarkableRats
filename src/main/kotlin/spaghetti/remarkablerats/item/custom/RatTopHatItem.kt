@@ -21,6 +21,8 @@ class RatTopHatItem(settings: Settings) : Item(settings) {
             type: TooltipType?) {
         super.appendTooltip(stack, context, tooltip, type)
         tooltip.add(Text.literal("${stack.get(RatDataComponentTypes.color)}"))
+        tooltip.add(Text.literal("${stack.get(RatDataComponentTypes.blockState)}"))
+        tooltip.add(Text.literal("${stack.get(RatDataComponentTypes.int_array_list)}"))
     }
 
     override fun use(world: World, user: PlayerEntity, hand: Hand): TypedActionResult<ItemStack> {
@@ -36,11 +38,21 @@ class RatTopHatItem(settings: Settings) : Item(settings) {
     }
 
     override fun useOnBlock(context: ItemUsageContext): ActionResult {
-        val itemStack = context.stack
+        val stack = context.stack
         val blockState = context.world.getBlockState(context.blockPos)
 
+        val data = 1
+
+        stack.set(RatDataComponentTypes.int_array_list, ArrayList<Int>()
+                .also {
+                    al -> stack.get(RatDataComponentTypes.int_array_list)?.forEach {
+                        i -> al.add(i)
+                    }; al.add(data)
+                })
+
+        stack.set(RatDataComponentTypes.blockState, blockState)
         if (blockState.isIn(BlockTags.WOOL)) {
-            itemStack.set(RatDataComponentTypes.color, when (blockState.block) {
+            stack.set(RatDataComponentTypes.color, when (blockState.block) {
                 Blocks.WHITE_WOOL      -> DyeColor.WHITE
                 Blocks.ORANGE_WOOL     -> DyeColor.ORANGE
                 Blocks.MAGENTA_WOOL    -> DyeColor.MAGENTA

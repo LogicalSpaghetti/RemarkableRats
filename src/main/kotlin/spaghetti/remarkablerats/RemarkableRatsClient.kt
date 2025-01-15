@@ -7,8 +7,8 @@ import net.minecraft.client.gui.screen.ingame.HandledScreens
 import spaghetti.remarkablerats.data.RatModelPredicates
 import spaghetti.remarkablerats.entity.RatEntities
 import spaghetti.remarkablerats.entity.RatModelLayers
-import spaghetti.remarkablerats.entity.entities.RatModel
-import spaghetti.remarkablerats.entity.entities.RatRenderer
+import spaghetti.remarkablerats.entity.models.RatModel
+import spaghetti.remarkablerats.entity.renderers.RatRenderer
 import spaghetti.remarkablerats.screen.RatEntityScreen
 import spaghetti.remarkablerats.screen.RatScreenHandlers
 
