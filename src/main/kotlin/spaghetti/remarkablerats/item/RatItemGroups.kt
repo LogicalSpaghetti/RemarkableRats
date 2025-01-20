@@ -21,7 +21,7 @@ object RatItemGroups {
                                 entries.add(RatItems.rat_spawn_egg)
                                 entries.add(RatItems.ratatouille)
                                 entries.add(RatItems.bundle_of_rats)
-                                entries.add(RatItems.rat_top_hat)
+                                entries.add(RatItems.rat_top_hat.also { hat -> hat.defaultStack })
                                 entries.add(RatBlocks.morton_pink_granite)
                             }.build())
 

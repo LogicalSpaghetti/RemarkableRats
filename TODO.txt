@@ -33,3 +33,26 @@ Rats should be good at complex tasks, but it should be difficult to explain the 
 it should be easy for the rat to get carried away, such as trying to put items in a full chest
 rats should get bored/distracted
     there are ways to keep rats more focused, but they waste time.
+
+Rats can walk to blocks
+Rats can walk to coordinates
+Rats can break and place blocks
+Rats can break and place blocks in a zone
+Rats can take specific items out of chests
+Rats can put specific items into chests
+Rats can defend an area
+Rats can target a specific mob type
+Rats can use items on blocks
+Rats can gather items
+Rats can harvest crops
+
+Task type, and task target (block, coordinate, entity type, item filter... )
+
+All stored on hats
+Different parts of the hat affect what it does
+	Each feature can limit other features
+Type
+Color
+Material
+Secondary material
+Flair(s)

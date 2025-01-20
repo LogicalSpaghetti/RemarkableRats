@@ -1,5 +1,6 @@
 package spaghetti.remarkablerats.item.custom
 
+import net.minecraft.block.Block
 import net.minecraft.block.Blocks
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
@@ -14,15 +15,20 @@ import net.minecraft.util.Hand
 import net.minecraft.util.TypedActionResult
 import net.minecraft.world.World
 import spaghetti.remarkablerats.data.RatDataComponentTypes
+import spaghetti.remarkablerats.entity.enums.RatActionType
 
 class RatTopHatItem(settings: Settings) : Item(settings) {
+
+    override fun getDefaultStack(): ItemStack {
+        return super.getDefaultStack().also { it.set(RatDataComponentTypes.color, DyeColor.BLACK) }
+    }
 
     override fun appendTooltip(stack: ItemStack, context: TooltipContext, tooltip: MutableList<Text>,
             type: TooltipType?) {
         super.appendTooltip(stack, context, tooltip, type)
         tooltip.add(Text.literal("${stack.get(RatDataComponentTypes.color)}"))
-        tooltip.add(Text.literal("${stack.get(RatDataComponentTypes.blockState)}"))
-        tooltip.add(Text.literal("${stack.get(RatDataComponentTypes.int_array_list)}"))
+        tooltip.add(Text.literal("${stack.get(RatDataComponentTypes.rat_action_string_list)}"))
+        tooltip.add(Text.literal("${stack.get(RatDataComponentTypes.rat_action_int_list)}"))
     }
 
     override fun use(world: World, user: PlayerEntity, hand: Hand): TypedActionResult<ItemStack> {
@@ -41,14 +47,21 @@ class RatTopHatItem(settings: Settings) : Item(settings) {
         val stack = context.stack
         val blockState = context.world.getBlockState(context.blockPos)
 
-        val data = 1
+        val data = Block.getRawIdFromState(blockState)
 
-        stack.set(RatDataComponentTypes.int_array_list, ArrayList<Int>()
-                .also {
-                    al -> stack.get(RatDataComponentTypes.int_array_list)?.forEach {
-                        i -> al.add(i)
-                    }; al.add(data)
-                })
+        stack.set(RatDataComponentTypes.rat_action_int_list, ArrayList<Int>().also {
+            al -> stack.get(RatDataComponentTypes.rat_action_int_list)?.forEach {
+                i -> al.add(i)
+            };
+            al.add(data)
+        })
+
+        stack.set(RatDataComponentTypes.rat_action_string_list, ArrayList<String>().also {
+            al -> stack.get(RatDataComponentTypes.rat_action_string_list)?.forEach {
+                i -> al.add(i)
+            };
+            al.add(RatActionType.MOVE_TO_BLOCKSTATE.type)
+        })
 
         stack.set(RatDataComponentTypes.blockState, blockState)
         if (blockState.isIn(BlockTags.WOOL)) {
@@ -72,7 +85,7 @@ class RatTopHatItem(settings: Settings) : Item(settings) {
             })
             return ActionResult.SUCCESS
         }
-
+        
         return super.useOnBlock(context)
     }
 }
