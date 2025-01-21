@@ -6,6 +6,7 @@ import net.minecraft.client.render.entity.model.SinglePartEntityModel
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.math.MathHelper
 import spaghetti.remarkablerats.entity.RatAnimations.RAT_IDLE
+import spaghetti.remarkablerats.entity.RatAnimations.RAT_STAND
 import spaghetti.remarkablerats.entity.RatAnimations.RAT_WALK
 import spaghetti.remarkablerats.entity.entities.RatEntity
 
@@ -14,12 +15,12 @@ class RatModel<T : RatEntity?>(root: ModelPart) : SinglePartEntityModel<T>() {
     private val head: ModelPart = rat.getChild("BodyBottom").getChild("Chest").getChild("Head")
 
     private fun setHeadAngles(headYaw: Float, headPitch: Float) {
-        var headYaw = headYaw
+        var headYaw = -headYaw
         var headPitch = headPitch
         headYaw = MathHelper.clamp(headYaw, -30.0f, 30.0f)
         headPitch = MathHelper.clamp(headPitch, -25.0f, 45.0f)
 
-        head.yaw = headYaw * 0.017453292f
+        head.yaw = -headYaw * 0.017453292f
         head.pitch = headPitch * 0.017453292f
     }
 
@@ -35,10 +36,13 @@ class RatModel<T : RatEntity?>(root: ModelPart) : SinglePartEntityModel<T>() {
             headPitch: Float) {
         this.part.traverse()
                 .forEach { obj: ModelPart -> obj.resetTransform() }  // this line resets the transformations each time, so they don't stack
-        this.setHeadAngles(netHeadYaw, headPitch)
+        this.setHeadAngles(-netHeadYaw, headPitch)
 
         this.animateMovement(RAT_WALK, limbSwing, limbSwingAmount, 2f, 2.5f)
-        if (entity != null) this.updateAnimation(entity.idleAnimationState, RAT_IDLE, ageInTicks, 1f)
+        if (entity != null) {
+            this.updateAnimation(entity.idleAnimationState, RAT_IDLE, ageInTicks, 1f)
+            this.updateAnimation(entity.sittingAnimationState, RAT_STAND, ageInTicks, 1f)
+        }
     }
 
     companion object {

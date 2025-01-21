@@ -55,6 +55,7 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World) : Comm
     /*** Variables ***/
 
     val idleAnimationState: AnimationState = AnimationState()
+    val sittingAnimationState: AnimationState = AnimationState()
     private var idleAnimationCooldown = 0
     private var inventory: DefaultedList<ItemStack> = DefaultedList.ofSize(inventory_size, ItemStack.EMPTY)
     private var wasSitting: Boolean = false
@@ -501,5 +502,23 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World) : Comm
     override fun getInstructionStage(): Int = this.dataTracker.get(instruction_stage)
     override fun incrementInstructionStage() {
         this.dataTracker.set(instruction_stage, this.dataTracker.get(instruction_stage).inc())
+    }
+
+    override fun setSitting(sitting: Boolean) {
+        if (sitting) {
+            sittingAnimationState.start(this.age)
+        } else {
+            sittingAnimationState.stop()
+        }
+        super.setSitting(sitting)
+    }
+
+    override fun setInSittingPose(inSittingPose: Boolean) {
+        if (inSittingPose) {
+            sittingAnimationState.start(this.age)
+        } else {
+            sittingAnimationState.stop()
+        }
+        super.setInSittingPose(inSittingPose)
     }
 }
