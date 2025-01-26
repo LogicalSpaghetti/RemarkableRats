@@ -1,14 +1,11 @@
-package spaghetti.remarkablerats.entity.renderers
+package spaghetti.remarkablerats.entity.entities
 
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.entity.EntityRendererFactory
 import net.minecraft.client.render.entity.MobEntityRenderer
-import net.minecraft.client.render.entity.feature.SaddleFeatureRenderer
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.Identifier
 import spaghetti.remarkablerats.entity.RatModelLayers
-import spaghetti.remarkablerats.entity.entities.RatEntity
-import spaghetti.remarkablerats.entity.models.RatModel
 import spaghetti.remarkablerats.id
 
 class RatRenderer(context: EntityRendererFactory.Context) :

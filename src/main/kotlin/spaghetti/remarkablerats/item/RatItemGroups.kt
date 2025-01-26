@@ -21,10 +21,11 @@ object RatItemGroups {
                                 entries.add(RatItems.rat_spawn_egg)
                                 entries.add(RatItems.ratatouille)
                                 entries.add(RatItems.bundle_of_rats)
-                                entries.add(RatItems.rat_top_hat.also { hat -> hat.defaultStack })
+                                entries.add(RatItems.rat_top_hat.defaultStack)
                                 entries.add(RatBlocks.morton_pink_granite)
                             }.build())
 
     fun registerRatItemGroups() {
-        logger.info("Registering $remarkablerats_item_group for $mod_id") }
+        logger.info("Registering $remarkablerats_item_group for $mod_id")
+    }
 }

@@ -8,10 +8,11 @@ import net.minecraft.world.WorldView
 import spaghetti.remarkablerats.entity.abstracts.CommandedEntity
 import spaghetti.remarkablerats.entity.enums.RatActionType
 
-class PathToTargetedBlockTypeGoal(val entity: CommandedEntity, speed: Double, range: Int): MoveToTargetPosGoal(entity, speed, range) {
+// TODO: get the walking to consistently reach the desired block instead of standing next to it
+class MoveToTargetedBlockTypeGoal(val entity: CommandedEntity, speed: Double, range: Int): MoveToTargetPosGoal(entity, speed, range) {
 
     override fun isTargetPos(world: WorldView, pos: BlockPos): Boolean {
-        return entity.getCurrentInstructionType() == RatActionType.MOVE_TO_BLOCKSTATE.type &&
+        return entity.getCurrentInstructionType() == RatActionType.TELEPORT_TO_BLOCKSTATE &&
                (world.isAir(pos.up())) &&
                world.getBlockState(pos).equals(Block.getStateFromRawId(entity.getCurrentInstructionData()))
     }
@@ -21,21 +22,17 @@ class PathToTargetedBlockTypeGoal(val entity: CommandedEntity, speed: Double, ra
     }
 
     override fun start() {
-        super.start()
-        val blockPos = this.getTargetPos().up()
-        entity.teleportTo(blockPos.x + 0.5, blockPos.y.toDouble(), blockPos.z + 0.5)
-        entity.reachedTarget()
-//        this.entity.setInSittingPose(false)
-        stop()
-    }
-
-    override fun stop() {
-        super.stop()
-        this.entity.setInSittingPose(false)
+//        super.start()
     }
 
     override fun tick() {
 //        super.tick()
+        entity.teleportOnTopOfBlock(this.getTargetPos())
+        stop()
+    }
+
+    override fun stop() {
+        entity.goalCompleted()
     }
 
     override fun getInterval(mob: PathAwareEntity?): Int = 0

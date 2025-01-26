@@ -1,18 +1,19 @@
 package spaghetti.remarkablerats.item.custom
 
 import net.minecraft.block.Block
-import net.minecraft.block.Blocks
+import net.minecraft.block.BlockState
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUsageContext
 import net.minecraft.item.tooltip.TooltipType
-import net.minecraft.registry.tag.BlockTags
 import net.minecraft.text.Text
 import net.minecraft.util.ActionResult
 import net.minecraft.util.DyeColor
 import net.minecraft.util.Hand
 import net.minecraft.util.TypedActionResult
+import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Direction
 import net.minecraft.world.World
 import spaghetti.remarkablerats.data.RatDataComponentTypes
 import spaghetti.remarkablerats.entity.enums.RatActionType
@@ -49,43 +50,33 @@ class RatTopHatItem(settings: Settings) : Item(settings) {
 
         val data = Block.getRawIdFromState(blockState)
 
-        stack.set(RatDataComponentTypes.rat_action_int_list, ArrayList<Int>().also {
-            al -> stack.get(RatDataComponentTypes.rat_action_int_list)?.forEach {
-                i -> al.add(i)
+        addEntryToStackList(stack, RatActionType.TELEPORT_TO_BLOCKSTATE, data)
+
+        return ActionResult.SUCCESS
+    }
+
+    private fun addEntryToStackList(stack: ItemStack, actionType: RatActionType, data: Int) {
+        stack.set(RatDataComponentTypes.rat_action_int_list, ArrayList<Int>().also { al ->
+            stack.get(RatDataComponentTypes.rat_action_int_list)?.forEach { i ->
+                al.add(i)
             };
             al.add(data)
         })
 
         stack.set(RatDataComponentTypes.rat_action_string_list, ArrayList<String>().also {
             al -> stack.get(RatDataComponentTypes.rat_action_string_list)?.forEach {
-                i -> al.add(i)
-            };
-            al.add(RatActionType.MOVE_TO_BLOCKSTATE.type)
+            i -> al.add(i)
+        };
+            al.add(actionType.type)
         })
+    }
 
-        stack.set(RatDataComponentTypes.blockState, blockState)
-        if (blockState.isIn(BlockTags.WOOL)) {
-            stack.set(RatDataComponentTypes.color, when (blockState.block) {
-                Blocks.WHITE_WOOL      -> DyeColor.WHITE
-                Blocks.ORANGE_WOOL     -> DyeColor.ORANGE
-                Blocks.MAGENTA_WOOL    -> DyeColor.MAGENTA
-                Blocks.LIGHT_BLUE_WOOL -> DyeColor.LIGHT_BLUE
-                Blocks.YELLOW_WOOL     -> DyeColor.YELLOW
-                Blocks.LIME_WOOL       -> DyeColor.LIME
-                Blocks.PINK_WOOL       -> DyeColor.PINK
-                Blocks.MAGENTA_WOOL    -> DyeColor.GRAY
-                Blocks.LIGHT_GRAY_WOOL -> DyeColor.LIGHT_GRAY
-                Blocks.CYAN_WOOL       -> DyeColor.CYAN
-                Blocks.PURPLE_WOOL     -> DyeColor.PURPLE
-                Blocks.BLUE_WOOL       -> DyeColor.BLUE
-                Blocks.BROWN_WOOL      -> DyeColor.BROWN
-                Blocks.GREEN_WOOL      -> DyeColor.GREEN
-                Blocks.RED_WOOL        -> DyeColor.RED
-                else                   -> DyeColor.BLACK
-            })
-            return ActionResult.SUCCESS
-        }
-        
-        return super.useOnBlock(context)
+    override fun canMine(state: BlockState, world: World, pos: BlockPos, miner: PlayerEntity): Boolean {
+        if (!world.isClient) blockPunched(miner, state, world, pos, miner.getStackInHand(Hand.MAIN_HAND))
+        return false
+    }
+
+    private fun blockPunched(player: PlayerEntity, state: BlockState, world: World, pos: BlockPos, stackInHand: ItemStack) {
+        addEntryToStackList(stackInHand, RatActionType.PLACE_BLOCK, Direction.UP.id)
     }
 }

@@ -42,7 +42,10 @@ import spaghetti.remarkablerats.data.RatTags.Items.rat_consumable_items
 import spaghetti.remarkablerats.entity.RatEntities
 import spaghetti.remarkablerats.entity.abstracts.CommandedEntity
 import spaghetti.remarkablerats.entity.enums.RatVariant
-import spaghetti.remarkablerats.entity.goals.PathToTargetedBlockTypeGoal
+import spaghetti.remarkablerats.entity.goals.BreakBlockGoal
+import spaghetti.remarkablerats.entity.goals.TeleportToTargetedBlockTypeGoal
+import spaghetti.remarkablerats.entity.goals.PlaceBlockGoal
+import spaghetti.remarkablerats.entity.goals.WaitGoal
 import spaghetti.remarkablerats.item.RatItems
 import spaghetti.remarkablerats.logger
 import spaghetti.remarkablerats.network.EntityIdPayload
@@ -70,8 +73,6 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World) : Comm
                 DataTracker.registerData(RatEntity::class.java, TrackedDataHandlerRegistry.INTEGER)
         private val from_bucket: TrackedData<Boolean> =
                 DataTracker.registerData(RatEntity::class.java, TrackedDataHandlerRegistry.BOOLEAN)
-        private val instruction_stage: TrackedData<Int> =
-                DataTracker.registerData(RatEntity::class.java, TrackedDataHandlerRegistry.INTEGER)
 
         fun createAttributes(): DefaultAttributeContainer.Builder {
             return createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0)
@@ -106,7 +107,10 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World) : Comm
                 FollowOwnerGoal(this, 1.0, 10.0f, 2.0f),
                 AnimalMateGoal(this, 1.0),
                 // have separate goals for each action type
-                PathToTargetedBlockTypeGoal(this, 1.0, 12),
+                TeleportToTargetedBlockTypeGoal(this, 1.0, 12),
+                PlaceBlockGoal(this),
+                BreakBlockGoal(this),
+                WaitGoal(this),
 
                 WanderAroundFarGoal(this, 1.0),
                 LookAtEntityGoal(this, PlayerEntity::class.java, 8.0f),
@@ -168,26 +172,14 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World) : Comm
         builder.add(variant, 0)
         builder.add(outfit_color, DyeColor.RED.id)
         builder.add(from_bucket, false)
-        builder.add(instruction_stage, 0)
     }
 
     override fun writeCustomDataToNbt(nbt: NbtCompound) {
         super.writeCustomDataToNbt(nbt)
         nbt.putInt("Variant", getTypeVariant())
         nbt.putInt("OutfitColor", getOutfitColor().id)
-        nbt.putInt("InstructionStage", getInstructionStage())
         nbt.putBoolean("FromBucket", isFromBucket)
         nbt.putInt("Age", this.getBreedingAge())
-
-        // Targets
-        val targetsArray = NbtList()
-        for (i in targetedDataList.indices) {
-            val nbtCompound = NbtCompound()
-            nbtCompound.putString("TargetType", targetTypeList[i])
-            nbtCompound.putInt("TargetData", targetedDataList[i])
-            targetsArray.add(nbtCompound)
-        }
-        nbt.put("TargetsArray", targetsArray)
 
         // Inventory
         val nbtList = NbtList()
@@ -206,22 +198,7 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World) : Comm
         super.readCustomDataFromNbt(nbt)
         this.dataTracker.set(variant, nbt.getInt("Variant"))
         if (nbt.contains("OutfitColor")) this.dataTracker.set(outfit_color, nbt.getInt("OutfitColor"))
-        if (nbt.contains("InstructionStage")) this.dataTracker.set(instruction_stage, nbt.getInt("InstructionStage"))
         if (nbt.contains("Age")) this.setBreedingAge(nbt.getInt("Age"))
-
-        if (nbt.contains("TargetsArray")) {
-            val targetsArray = nbt.getList("TargetsArray", NbtElement.COMPOUND_TYPE.toInt())
-            val targetTypeArrayList: ArrayList<String> = arrayListOf()
-            val targetedDataArrayList: ArrayList<Int> = arrayListOf()
-            for (i in 0..< targetsArray.size) {
-                val nbtCompound = targetsArray.getCompound(i)
-                targetTypeArrayList.add(nbtCompound.getString("TargetType"))
-                targetedDataArrayList.add(nbtCompound.getInt("TargetData"))
-            }
-            targetTypeList = targetTypeArrayList
-            targetedDataList = targetedDataArrayList
-            nbt.put("TargetsArray", targetsArray)
-        }
 
         // Inventory i1IlL
         val nbtList = nbt.getList("Items", NbtElement.COMPOUND_TYPE.toInt())
@@ -259,7 +236,7 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World) : Comm
         this.dataTracker.set(variant, nbt.getInt("Variant"))
         println("readCustomDataFromNbt was called")
         if (nbt.contains("OutfitColor")) this.dataTracker.set(outfit_color, nbt.getInt("OutfitColor"))
-        if (nbt.contains("InstructionStage")) this.dataTracker.set(instruction_stage, nbt.getInt("InstructionStage"))
+        if (nbt.contains("InstructionStage")) setInstructionStage(nbt.getInt("InstructionStage"))
         if (nbt.contains("Age")) {
             this.setBreedingAge(nbt.getInt("Age"))
         }
@@ -498,11 +475,6 @@ class RatEntity(entityType: EntityType<out TameableEntity>, world: World) : Comm
     }
 
     /*** Target Handling ***/
-
-    override fun getInstructionStage(): Int = this.dataTracker.get(instruction_stage)
-    override fun incrementInstructionStage() {
-        this.dataTracker.set(instruction_stage, this.dataTracker.get(instruction_stage).inc())
-    }
 
     override fun setSitting(sitting: Boolean) {
         if (sitting) {

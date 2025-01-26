@@ -6,7 +6,6 @@ import net.minecraft.item.SpawnEggItem
 import net.minecraft.registry.Registries
 import net.minecraft.registry.Registry
 import net.minecraft.sound.SoundEvents
-import net.minecraft.util.Identifier
 import spaghetti.remarkablerats.entity.RatEntities
 import spaghetti.remarkablerats.id
 import spaghetti.remarkablerats.item.custom.BundleOfRatsItem

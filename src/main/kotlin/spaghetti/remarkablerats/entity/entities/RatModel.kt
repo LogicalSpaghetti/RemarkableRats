@@ -1,4 +1,4 @@
-package spaghetti.remarkablerats.entity.models
+package spaghetti.remarkablerats.entity.entities
 
 import net.minecraft.client.model.*
 import net.minecraft.client.render.VertexConsumer
@@ -8,7 +8,6 @@ import net.minecraft.util.math.MathHelper
 import spaghetti.remarkablerats.entity.RatAnimations.RAT_IDLE
 import spaghetti.remarkablerats.entity.RatAnimations.RAT_STAND
 import spaghetti.remarkablerats.entity.RatAnimations.RAT_WALK
-import spaghetti.remarkablerats.entity.entities.RatEntity
 
 class RatModel<T : RatEntity?>(root: ModelPart) : SinglePartEntityModel<T>() {
     private val rat: ModelPart = root.getChild("Rat")

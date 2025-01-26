@@ -25,6 +25,8 @@ Rat manipulations:
     Path to (relative) location
     Movement
     Rotation
+    Place
+    Break
     Delay
     Sensing the world (mostly automatic)
 
