@@ -2,9 +2,11 @@ package spaghetti.remarkablerats.data
 
 import com.mojang.serialization.Codec
 import net.minecraft.component.ComponentType
+import net.minecraft.item.ItemStack
 import net.minecraft.registry.Registries
 import net.minecraft.registry.Registry
 import net.minecraft.util.DyeColor
+import spaghetti.remarkablerats.entity.enums.RatActionType
 import spaghetti.remarkablerats.id
 import spaghetti.remarkablerats.logger
 import spaghetti.remarkablerats.mod_id

@@ -13,24 +13,33 @@ class TeleportToTargetedBlockTypeGoal(val entity: CommandedEntity, speed: Double
 
     override var waitDuration: Int = 0
 
-    override fun canStart(): Boolean { return entity.getCurrentInstructionType() == RatActionType.TELEPORT_TO_BLOCKSTATE }
+    override fun canStart(): Boolean {
+        return (entity.getCurrentInstructionType() == RatActionType.TELEPORT_TO_BLOCKSTATE) &&
+               this.findTargetPos()
+    }
 
     override fun start() {
-        logger.info("Teleported successfully: ${entity.teleportOnTopOfBlock(this.getTargetPos())}")
+        logger.info("Teleported ${if(entity.teleportOnTopOfBlock(this.getTargetPos())){""}else{"un"}}successfully!")
         waitDuration = getDelayAfterAction()
     }
 
+    override fun shouldContinue(): Boolean {
+        return canStart()
+    }
+
     override fun isTargetPos(world: WorldView, pos: BlockPos): Boolean {
-        return entity.getCurrentInstructionType() == RatActionType.TELEPORT_TO_BLOCKSTATE &&
-               (world.isAir(pos.up())) &&
+        return (world.isAir(pos.up())) &&
                world.getBlockState(pos).equals(Block.getStateFromRawId(entity.getCurrentInstructionData()))
     }
 
-    override fun tick() { delayTick() }
+    override fun tick() {
+        delayTick()
+    }
 
-    override fun waitFinished() { stop() }
-
-    override fun stop() { entity.goalCompleted() }
+    override fun waitFinished() {
+        entity.goalCompleted()
+        waitDuration = getDelayAfterAction()
+    }
 
     override fun getInterval(mob: PathAwareEntity?): Int = 0
 }

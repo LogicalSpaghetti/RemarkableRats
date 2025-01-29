@@ -66,9 +66,12 @@ class RatTopHatItem(settings: Settings) : Item(settings) {
         stack.set(RatDataComponentTypes.rat_action_string_list, ArrayList<String>().also {
             al -> stack.get(RatDataComponentTypes.rat_action_string_list)?.forEach {
             i -> al.add(i)
-        };
+            };
             al.add(actionType.type)
         })
+
+        // probably works, TODO: test
+//        stack.set(rat_action_string_list, listOf(*stack.get(rat_action_string_list)?.toTypedArray().orEmpty(), actionType.type))
     }
 
     override fun canMine(state: BlockState, world: World, pos: BlockPos, miner: PlayerEntity): Boolean {

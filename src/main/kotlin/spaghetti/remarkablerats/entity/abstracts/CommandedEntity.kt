@@ -116,9 +116,9 @@ abstract class CommandedEntity protected constructor(entityType: EntityType<out 
         }
     }
 
-    fun teleportOnTopOfBlock(destPos: BlockPos) { teleportTo(destPos.x + 0.5, destPos.y.toDouble() + 1, destPos.z + 0.5) }
+    fun teleportOnTopOfBlock(destPos: BlockPos): Boolean { return teleportTo(destPos.x + 0.5, destPos.y.toDouble() + 1, destPos.z + 0.5) }
 
-    fun teleportTo(x: Double, y: Double, z: Double): Boolean {
+    private fun teleportTo(x: Double, y: Double, z: Double): Boolean {
         logger.info("Teleporting to: $x, $y, $z")
         val mutable = BlockPos.Mutable(x, y, z)
 
